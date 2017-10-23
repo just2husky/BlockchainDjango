@@ -16,8 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 
 from . import view, search, search2
-from .controller import login_controller, block_chain_controller
-
+from .controller import login_controller
+from .controller.block_chain_controller import BlockChainController
 """
 Django url() 可以接收四个参数，分别是两个必选参数：regex、view 和两个可选参数：kwargs、name，接下来详细介绍这四个参数。
 regex: 正则表达式，与之匹配的 URL 会执行对应的第二个参数 view。
@@ -33,6 +33,8 @@ urlpatterns = [
 
     url(r'^log-page$', login_controller.log_page),
     url(r'^login$', login_controller.login),
-    url(r'^blockchain-manager$', block_chain_controller.block_chain_manager),
-    url(r'^blockchain-init$', block_chain_controller.block_chain_init),
+    url(r'^blockchain-manager$', BlockChainController.manager),
+    url(r'^blockchain-init$', BlockChainController.init),
+    url(r'^to-add-patient$', BlockChainController.to_add_patient),
+    url(r'^add-patient$', BlockChainController.add_patient),
 ]
