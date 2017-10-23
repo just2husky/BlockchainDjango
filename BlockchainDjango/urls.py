@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'^search-post$', search2.search_post),
 
     url(r'^log-page$', login_controller.log_page),
+    url(r'^login$', login_controller.login),
 ]
