@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div style="width:100%;text-align:center">
+        <form action="/login" method="post">
+            {% csrf_token %}
+            <label>登录界面</label> <br><br>
+            <label>医生ID：</label>
+            <input type="text" name="doctor_id"> <br>
+            <label>登录密码：</label>
+            <input type="password" name="password"> <br>
+            <input type="submit" value="登录">
+        </form>
+    </div>
+
+</body>
+</html>

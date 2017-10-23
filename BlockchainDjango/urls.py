@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url
 
-from . import view, search
+from . import view, search, search2
+from .controller import login_controller
 
 """
 Django url() 可以接收四个参数，分别是两个必选参数：regex、view 和两个可选参数：kwargs、name，接下来详细介绍这四个参数。
@@ -28,4 +29,7 @@ urlpatterns = [
     url(r'^hello$', view.hello),
     url(r'^search-form$', search.search_form),
     url(r'^search$', search.search),
+    url(r'^search-post$', search2.search_post),
+
+    url(r'^log-page$', login_controller.log_page),
 ]
