@@ -2,10 +2,10 @@
 # -*- coding: UTF-8 -*-
 import logging
 import time
-from BlockchainDjango.util.merkle_tree import gen_merkle_tree
-from BlockchainDjango.entity.block import Block
-from BlockchainDjango.util import couchdb_util
-from BlockchainDjango.util.const import Const
+from ..util.merkle_tree import gen_merkle_tree
+from ..entity.block import Block
+from ..util import couchdb_util
+from ..util.const import Const
 from .transaction_service import TransactionService
 
 logging.basicConfig(level=logging.INFO)

@@ -37,4 +37,5 @@ urlpatterns = [
     url(r'^blockchain-init$', BlockChainController.init),
     url(r'^to-add-patient$', BlockChainController.to_add_patient),
     url(r'^add-patient$', BlockChainController.add_patient),
+    url(r'^find-patient$', BlockChainController.find_patient),
 ]

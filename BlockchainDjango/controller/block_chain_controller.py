@@ -41,4 +41,14 @@ class BlockChainController(object):
             last_block_id = PatientService.save(patient)
             rtn_msg['msg'] = '病人信息存储成功，所在区块为：' + last_block_id
 
-            return render(request, 'add-patient.html', rtn_msg)
+        return render(request, 'add-patient.html', rtn_msg)
+
+    @staticmethod
+    @csrf_exempt
+    def find_patient(request):
+        rtn_msg = {'msg': 'find_patient'}
+        if request.POST:
+            identifier = request.POST['identifier']
+            rtn_msg['msg'] = PatientService.find_by_id(identifier)
+
+        return render(request, 'blockchain_manager.html', rtn_msg)

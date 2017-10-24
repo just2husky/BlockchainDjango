@@ -11,6 +11,11 @@
         <input type="button" onclick="javascript:location.href='blockchain-init'" value="初始化区块链">
         <br><br>
         <input type="button" onclick="javascript:location.href='to-add-patient'" value="添加病人">
+        <br><br>
+        <form action="/find-patient" method="post">
+            证件号: <input type="text" name="identifier">
+            <input type="button" onclick="javascript:location.href='find-patient'" value="查询病人">
+        </form>
         <p>{{ msg }}</p>
     </div>
 </body>
