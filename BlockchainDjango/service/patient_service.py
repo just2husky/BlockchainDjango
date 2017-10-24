@@ -53,6 +53,8 @@ class PatientService(object):
                     content_str = transaction_dict['content']
                     content_dict = eval(content_str)
                     if identifier == content_dict['identifier']:
+                        content_dict['transaction_id'] = transaction_dict['id']
+                        content_dict['block_id'] = doc['_id']
                         logger.info('Find patient ' + identifier + ', in transaction ' +
                                     transaction_dict['id'] + ', in block ' + doc['_id'])
                         return content_dict

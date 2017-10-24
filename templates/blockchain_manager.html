@@ -18,14 +18,34 @@
         </form>
         {% if status == '1' %}
             <div>
-                <p>病人信息</p>
-                <p>证件号: {{ identifier }}</p>
-                <p>姓名: {{ name }}</p>
-                <p>性别: {{ gender }}</p>
-                <p>年龄: {{ age }}</p>
-                <p>民族: {{ nation}}</p>
-                <p>出生地: {{ born_loc }}</p>
-                <p>现居地: {{ address }}</p>
+                <table border="1" align="center">
+                    <tr>
+                        <th colspan="2">病人信息</th>
+                    </tr>
+                    <tr>
+                        <td>证件号: {{ identifier }} </td>
+                        <td>姓名: {{ name }} </td>
+                    </tr>
+                    <tr>
+                        <td>性别: {{ gender }} </td>
+                        <td>年龄: {{ age }} </td>
+
+                    </tr>
+                    <tr>
+                        <td>民族: {{ nation}}</td>
+                        <td>出生地: {{ born_loc }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">现居地: {{ address }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">所在交易单ID：{{ transaction_id }} </td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="2">所在区块ID：{{ block_id }} </td>
+                    </tr>
+                </table>
             </div>
         {% elif status == '0' %}
             <div>病人信息不存在！</div>
