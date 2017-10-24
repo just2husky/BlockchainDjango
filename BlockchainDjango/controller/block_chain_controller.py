@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
+import logging
+
 from django.shortcuts import render_to_response, render
 from django.views.decorators.csrf import csrf_exempt
 
@@ -7,6 +9,8 @@ from ..service.block_chain_service import BlockChainService
 from ..entity.patient import Patient
 from ..service.patient_service import PatientService
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class BlockChainController(object):
 
@@ -46,9 +50,14 @@ class BlockChainController(object):
     @staticmethod
     @csrf_exempt
     def find_patient(request):
-        rtn_msg = {'msg': 'find_patient'}
+        # status 0:获取失败 1:获取成功
+        rtn_msg = {'status': '0'}
         if request.POST:
             identifier = request.POST['identifier']
-            rtn_msg['msg'] = PatientService.find_by_id(identifier)
+            rtn_dict = PatientService.find_by_id(identifier)
+            if rtn_dict is not None:
+                rtn_msg['status'] = '1'
+                rtn_msg.update(rtn_dict)
 
+        logger.info('status: ' + rtn_msg['status'])
         return render(request, 'blockchain_manager.html', rtn_msg)

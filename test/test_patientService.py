@@ -7,7 +7,7 @@ class TestPatientService(TestCase):
         self.fail()
 
     def test_find_by_id(self):
-        patient_dict = PatientService.find_by_id('101')
+        patient_dict = PatientService.find_by_id('11')
         if patient_dict is not None:
             print(patient_dict)
 

@@ -26,6 +26,11 @@ class PatientService(object):
 
     @staticmethod
     def find_by_id(identifier):
+        """
+        根据 identifier 去查找病人，查找成功则返回病人信息的dict，否则返回None
+        :param identifier:
+        :return:
+        """
         db = couchdb_util.get_db(Const.DB_NAME)
         doc = db[Const.LAST_BLOCK_ID]
         last_block = doc['last_block_id']

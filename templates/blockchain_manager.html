@@ -16,6 +16,20 @@
             证件号: <input type="text" name="identifier">
             <input type="button" onclick="javascript:location.href='find-patient'" value="查询病人">
         </form>
+        {% if status == '1' %}
+            <div>
+                <p>病人信息</p>
+                <p>证件号: {{ identifier }}</p>
+                <p>姓名: {{ name }}</p>
+                <p>性别: {{ gender }}</p>
+                <p>年龄: {{ age }}</p>
+                <p>民族: {{ nation}}</p>
+                <p>出生地: {{ born_loc }}</p>
+                <p>现居地: {{ address }}</p>
+            </div>
+        {% elif status == '0' %}
+            <div>病人信息不存在！</div>
+        {% endif %}
         <p>{{ msg }}</p>
     </div>
 </body>
