@@ -11,45 +11,89 @@
         <input type="button" onclick="javascript:location.href='blockchain-init'" value="初始化区块链">
         <br><br>
         <input type="button" onclick="javascript:location.href='to-add-patient'" value="添加病人">
+        <input type="button" onclick="javascript:location.href='to-add-doctor'" value="添加医生">
         <br><br>
+        <!-- 查询病人功能 -->
         <form action="/find-patient" method="post">
             证件号: <input type="text" name="identifier">
-            <input type="button" onclick="javascript:location.href='find-patient'" value="查询病人">
+            <input type="submit" onclick="javascript:location.href='find-patient'" value="查询病人">
         </form>
-        {% if status == '1' %}
+        {% if patient.status == '1' %}
             <div>
                 <table border="1" align="center">
                     <tr>
                         <th colspan="2">病人信息</th>
                     </tr>
                     <tr>
-                        <td>证件号: {{ identifier }} </td>
-                        <td>姓名: {{ name }} </td>
+                        <td>证件号: {{  patient.identifier }} </td>
+                        <td>姓名: {{  patient.name }} </td>
                     </tr>
                     <tr>
-                        <td>性别: {{ gender }} </td>
-                        <td>年龄: {{ age }} </td>
+                        <td>性别: {{  patient.gender }} </td>
+                        <td>年龄: {{  patient.age }} </td>
 
                     </tr>
                     <tr>
-                        <td>民族: {{ nation}}</td>
-                        <td>出生地: {{ born_loc }}</td>
+                        <td>民族: {{  patient.nation}}</td>
+                        <td>出生地: {{  patient.born_loc }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2">现居地: {{ address }}</td>
+                        <td colspan="2">现居地: {{  patient.address }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2">所在交易单ID：{{ transaction_id }} </td>
+                        <td colspan="2">所在交易单ID：{{  patient.transaction_id }} </td>
 
                     </tr>
                     <tr>
-                        <td colspan="2">所在区块ID：{{ block_id }} </td>
+                        <td colspan="2">所在区块ID：{{  patient.block_id }} </td>
                     </tr>
                 </table>
             </div>
-        {% elif status == '0' %}
+        {% elif  patient.status == '0' %}
             <div>病人信息不存在！</div>
         {% endif %}
+
+        <!-- 查询医生功能 -->
+        <form action="/find-doctor" method="post">
+            医生编号: <input type="text" name="identifier">
+            <input type="submit" onclick="javascript:location.href='find-doctor'" value="查询医生">
+        </form>
+        {% if doctor.status == '1' %}
+            <div>
+                <table border="1" align="center">
+                    <tr>
+                        <th colspan="2">医生信息</th>
+                    </tr>
+                    <tr>
+                        <td>医生编号: {{ doctor.identifier }} </td>
+                        <td>姓名: {{ doctor.name }} </td>
+                    </tr>
+                    <tr>
+                        <td>性别: {{ doctor.gender }} </td>
+                        <td>年龄: {{ doctor.age }} </td>
+
+                    </tr>
+                    <tr>
+                        <td>民族: {{ doctor.nation}}</td>
+                        <td>医院: {{ doctor.hospital }}</td>
+                    </tr>
+                    <tr>
+                        <td>科室: {{ doctor.department }}</td>
+                        <td>级别: {{ doctor.grade }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">所在交易单ID：{{ doctor.transaction_id }} </td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="2">所在区块ID：{{ doctor.block_id }} </td>
+                    </tr>
+                </table>
+            </div>
+        {% elif doctor.status == '0' %}
+            <div>医生信息不存在！</div>
+        {% endif %}
+
         <p>{{ msg }}</p>
     </div>
 </body>

@@ -7,10 +7,13 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ..service.block_chain_service import BlockChainService
 from ..entity.patient import Patient
+from ..entity.doctor import Doctor
 from ..service.patient_service import PatientService
+from ..service.doctor_service import DoctorService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class BlockChainController(object):
 
@@ -28,6 +31,10 @@ class BlockChainController(object):
     @staticmethod
     def to_add_patient(request):
         return render_to_response('add-patient.html')
+
+    @staticmethod
+    def to_add_doctor(request):
+        return render_to_response('add-doctor.html')
 
     @staticmethod
     @csrf_exempt
@@ -49,15 +56,51 @@ class BlockChainController(object):
 
     @staticmethod
     @csrf_exempt
-    def find_patient(request):
-        # status 0:获取失败 1:获取成功
-        rtn_msg = {'status': '0'}
+    def add_doctor(request):
+        rtn_msg = {}
         if request.POST:
             identifier = request.POST['identifier']
-            rtn_dict = PatientService.find_by_id(identifier)
-            if rtn_dict is not None:
-                rtn_msg['status'] = '1'
-                rtn_msg.update(rtn_dict)
+            name = request.POST['name']
+            gender = request.POST['gender']
+            age = request.POST['age']
+            nation = request.POST['nation']
+            hospital = request.POST['hospital']
+            department = request.POST['department']
+            grade = request.POST['grade']
+            doctor = Doctor(identifier, name, gender, age, nation, hospital, department, grade)
+            last_block_id = DoctorService.save(doctor)
+            rtn_msg['msg'] = '医生信息存储成功，所在区块为：' + last_block_id
 
-        logger.info('status: ' + rtn_msg['status'])
+        return render(request, 'add-doctor.html', rtn_msg)
+
+    @staticmethod
+    @csrf_exempt
+    def find_patient(request):
+        # status 0:获取失败 1:获取成功
+        rtn_msg = {}
+        if request.POST:
+            identifier = request.POST['identifier']
+            patient_dict = PatientService.find_by_id(identifier)
+            if patient_dict is not None:
+                patient_dict['status'] = '1'
+                rtn_msg['patient'] = patient_dict
+            else:
+                rtn_msg['patient'] = {'status': '0'}
+
+        return render(request, 'blockchain_manager.html', rtn_msg)
+
+    @staticmethod
+    @csrf_exempt
+    def find_doctor(request):
+        # status 0:获取失败 1:获取成功
+        rtn_msg = {}
+        if request.POST:
+            identifier = request.POST['identifier']
+            doctor_dict = DoctorService.find_by_id(identifier)
+            if doctor_dict is not None:
+                doctor_dict['status'] = '1'
+                rtn_msg['doctor'] = doctor_dict
+            else:
+                rtn_msg['doctor'] = {'status': '0'}
+
         return render(request, 'blockchain_manager.html', rtn_msg)
