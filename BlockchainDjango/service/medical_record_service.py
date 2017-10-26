@@ -6,7 +6,10 @@ import time
 from ..entity.medical_record import MedicalRecord
 from ..entity.patient_record import PatientRecord
 from ..entity.doctor_record import DoctorRecord
+
 from ..util.const import RecordType
+from ..util import couchdb_util
+from ..util.const import Const
 from .transaction_service import TransactionService
 from .block_service import BlockService
 from .block_chain_service import BlockChainService
@@ -77,3 +80,44 @@ class MedicalRecordService(object):
         doctor_record = DoctorRecord(doctor_id, record_tx_id)
         doctor_record_tx = TransactionService.gen_tx(doctor_record)
         return doctor_record_tx
+
+    @staticmethod
+    def find_by_patient_id(patient_id):
+        """
+        根据病人的ID查找其所有的就诊记录
+        :param patient_id:
+        :return:
+        """
+        tx_type = 'patient_record'
+        record_list = []
+
+        db = couchdb_util.get_db(Const.DB_NAME)
+        doc = db[Const.LAST_BLOCK_ID]
+        last_block = doc['last_block_id']
+        doc = db[last_block]
+
+        while True:
+            # 若当前区块的 pre_id 为0，则表示便利整个区块链后，均未找到 id 为 所查询 id 的病人返回 none
+            # 创世区块不存储transaction， 跳过
+            if '0000000000000000000000000000000000000000000000000000000000000000' == doc['pre_id']:
+                break
+
+            tx_list = doc['tx_list']
+            # tx 保存了 一个Transaction 的 ID
+            for tx in tx_list:
+                tx_doc = db[tx]
+                transaction_str = tx_doc['Transaction']
+                transaction_dict = eval(transaction_str)
+
+                if tx_type == transaction_dict['tx_type']:
+                    content_str = transaction_dict['content']
+                    content_dict = eval(content_str)
+                    if patient_id == content_dict['patient_id']:
+                        logger.info('Find ' + patient_id + ', in transaction ' +
+                                    transaction_dict['id'] + ', in block ' + doc['_id'])
+                        record_list.append(content_dict['record_tx_id'])
+                logger.info(transaction_str)
+
+            doc = db[doc['pre_id']]
+
+        return record_list

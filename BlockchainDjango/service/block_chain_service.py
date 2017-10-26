@@ -22,11 +22,12 @@ class BlockChainService(object):
         return last_block_id
 
     @staticmethod
-    def find_content(identifier, tx_type):
+    def find_content(identifier, tx_type, identifier_name='identifier'):
         """
         根据 Transaction 的 tx_type 和其中所存储的 content 的 id 来查找Transaction，并以dict的形式返回 content 的内容
         :param identifier:
         :param tx_type:
+        :param identifier_name: 标志content中作为identifier的key的名字，默认为‘identifier’
         :return:
         """
         db = couchdb_util.get_db(Const.DB_NAME)
@@ -50,7 +51,7 @@ class BlockChainService(object):
                 if tx_type == transaction_dict['tx_type']:
                     content_str = transaction_dict['content']
                     content_dict = eval(content_str)
-                    if identifier == content_dict['identifier']:
+                    if identifier == content_dict[identifier_name]:
                         content_dict['transaction_id'] = transaction_dict['id']
                         content_dict['block_id'] = doc['_id']
                         logger.info('Find ' + identifier + ', in transaction ' +

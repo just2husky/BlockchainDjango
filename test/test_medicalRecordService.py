@@ -9,3 +9,9 @@ class TestMedicalRecordService(TestCase):
         medical_record = MedicalRecordService.find_by_id(record_id)
         print(medical_record)
 
+    def test_find_by_patient_id(self):
+        patient_id = '101'
+        tx_list = MedicalRecordService.find_by_patient_id(patient_id)
+        print(tx_list)
+
+
