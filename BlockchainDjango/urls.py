@@ -33,12 +33,18 @@ urlpatterns = [
 
     url(r'^log-page$', login_controller.log_page),
     url(r'^login$', login_controller.login),
+
     url(r'^blockchain-manager$', BlockChainController.manager),
     url(r'^blockchain-init$', BlockChainController.init),
+
     url(r'^to-add-patient$', BlockChainController.to_add_patient),
     url(r'^add-patient$', BlockChainController.add_patient),
     url(r'^find-patient$', BlockChainController.find_patient),
+
     url(r'^add-doctor$', BlockChainController.add_doctor),
     url(r'^to-add-doctor$', BlockChainController.to_add_doctor),
     url(r'^find-doctor$', BlockChainController.find_doctor),
+
+    url(r'^to-add-medical-record$', BlockChainController.to_add_medical_record),
+    url(r'^add-medical-record$', BlockChainController.add_medical_record),
 ]

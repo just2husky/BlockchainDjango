@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>区块链系统</title>
+</head>
+<body>
+    <div style="width:100%;text-align:center">
+        <form action="/add-medical-record" method="post">
+            {% csrf_token %}
+            <br><br>
+            <label>添加就诊记录界面</label> <br><br>
+            医生ID: {{ session.doctor_id }} <br><br>
+            <table border="1" align="center">
+                <tr>
+                    <th colspan="2">病人信息</th>
+                </tr>
+                <tr>
+                    <td>证件号: {{  patient.identifier }} </td>
+                    <td>姓名: {{  patient.name }} </td>
+                </tr>
+                <tr>
+                    <td>性别: {{  patient.gender }} </td>
+                    <td>年龄: {{  patient.age }} </td>
+
+                </tr>
+                <tr>
+                    <td>民族: {{  patient.nation}}</td>
+                    <td>出生地: {{  patient.born_loc }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">现居地: {{  patient.address }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">所在交易单ID：{{  patient.transaction_id }} </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2">所在区块ID：{{  patient.block_id }} </td>
+                </tr>
+                <tr align="left" >
+                    <td colspan="2">
+                        就诊医院： <input type="text" name="record_loc">
+                    </td>
+                </tr>
+                <tr align="left" >
+                    <td colspan="2">
+                        主诉: <textarea name="chief_complaint" rows="10" cols="60"> </textarea>
+                    </td>
+                </tr>
+                <tr align="left">
+                    <td colspan="2">
+                        现病史: <textarea name="present_illness_history" rows="10" cols="60"> </textarea>
+                    </td>
+                </tr>
+                <tr align="left">
+                    <td colspan="2">
+                        既往史: <textarea name="past_history" rows="10" cols="60"> </textarea>
+                    </td>
+                </tr>
+            </table>
+            <!-- 将病人ID传到controller --->
+            <input type="hidden" name="patient_id" value="{{ patient.identifier }}">
+
+            <input type="submit" value="提交"> <br><br>
+            <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">
+        </form>
+
+        <p>{{ msg }}</p>
+    </div>
+</body>
+</html>

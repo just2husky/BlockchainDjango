@@ -2,17 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>区块链系统</title>
 </head>
 <body>
     <div style="width:100%;text-align:center">
         <label>区块链管理</label>
         <br><br><br><br>
+        <p>{{ session.doctor_id }} 已登录</p>
         <input type="button" onclick="javascript:location.href='blockchain-init'" value="初始化区块链">
         <br><br>
         <input type="button" onclick="javascript:location.href='to-add-patient'" value="添加病人">
         <input type="button" onclick="javascript:location.href='to-add-doctor'" value="添加医生">
         <br><br>
+        <form action="/to-add-medical-record" method="post">
+            病人ID: <input type="text" name="patient_id">
+            <input type="submit"  value="增加就诊记录">
+        </form>
+        <br><br>
+
         <!-- 查询病人功能 -->
         <form action="/find-patient" method="post">
             证件号: <input type="text" name="identifier">

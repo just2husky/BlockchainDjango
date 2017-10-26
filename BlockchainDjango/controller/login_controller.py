@@ -21,7 +21,7 @@ def login(request):
 
         if result:
             request.session['doctor_id'] = doctor_id
-            return render(request, 'login_success.html')
+            return render(request, 'login_success.html',  {'session': request.session})
         else:
             return render(request, 'login_error.html')
 
