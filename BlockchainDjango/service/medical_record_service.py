@@ -4,6 +4,8 @@ import logging
 import time
 
 from ..entity.medical_record import MedicalRecord
+from ..entity.patient_record import PatientRecord
+from ..entity.doctor_record import DoctorRecord
 from ..util.const import RecordType
 from .transaction_service import TransactionService
 from .block_service import BlockService
@@ -33,7 +35,12 @@ class MedicalRecordService(object):
         medical_record = MedicalRecord(record_id, doctor_id, patient_id, record_time, record_loc,
                                        chief_complaint, present_illness_history, past_history, record_type)
 
-        last_block_id = BlockService.add_block([TransactionService.gen_tx(medical_record)])
+        # 添加一条就诊记录信息时，同时添加病人与该就诊记录对照关系的Transaction和添加医生与该就诊记录对照关系的Transaction
+        record_tx = TransactionService.gen_tx(medical_record)
+        patient_record_tx = MedicalRecordService.gen_medical_patient_tx(patient_id, record_tx.id)
+        doctor_record_tx = MedicalRecordService.gen_medical_doctor_tx(doctor_id, record_tx.id)
+
+        last_block_id = BlockService.add_block([record_tx, patient_record_tx, doctor_record_tx])
         return last_block_id
 
     @staticmethod
@@ -47,3 +54,26 @@ class MedicalRecordService(object):
         tx_type = 'medical_record'
         return BlockChainService.find_content(record_id, tx_type)
 
+    @staticmethod
+    def gen_medical_patient_tx(patient_id, record_tx_id):
+        """
+        用于生成 就诊记录与病人对照关系的函数
+        :param patient_id:
+        :param record_tx_id:
+        :return:
+        """
+        patient_record = PatientRecord(patient_id, record_tx_id)
+        patient_record_tx = TransactionService.gen_tx(patient_record)
+        return patient_record_tx
+
+    @staticmethod
+    def gen_medical_doctor_tx(doctor_id, record_tx_id):
+        """
+        用于生成 就诊记录与医生对照关系的函数
+        :param doctor_id:
+        :param record_tx_id:
+        :return:
+        """
+        doctor_record = DoctorRecord(doctor_id, record_tx_id)
+        doctor_record_tx = TransactionService.gen_tx(doctor_record)
+        return doctor_record_tx
