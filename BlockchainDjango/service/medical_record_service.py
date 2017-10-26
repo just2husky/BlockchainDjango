@@ -82,13 +82,14 @@ class MedicalRecordService(object):
         return doctor_record_tx
 
     @staticmethod
-    def find_by_patient_id(patient_id):
+    def find_by_relation(tx_type, identifier, id_name):
         """
-        根据病人的ID查找其所有的就诊记录
-        :param patient_id:
+        根据 tx_type, identifier, id_name 来查找对应 transaction 的 id，存入list中并返回
+        :param tx_type:
+        :param identifier: 如patient_id, doctor_id
+        :param id_name: 如'patient_id', 'doctor_id'
         :return:
         """
-        tx_type = 'patient_record'
         record_list = []
 
         db = couchdb_util.get_db(Const.DB_NAME)
@@ -112,8 +113,8 @@ class MedicalRecordService(object):
                 if tx_type == transaction_dict['tx_type']:
                     content_str = transaction_dict['content']
                     content_dict = eval(content_str)
-                    if patient_id == content_dict['patient_id']:
-                        logger.info('Find ' + patient_id + ', in transaction ' +
+                    if identifier == content_dict[id_name]:
+                        logger.info('Find ' + identifier + ', in transaction ' +
                                     transaction_dict['id'] + ', in block ' + doc['_id'])
                         record_list.append(content_dict['record_tx_id'])
                 logger.info(transaction_str)
@@ -121,3 +122,25 @@ class MedicalRecordService(object):
             doc = db[doc['pre_id']]
 
         return record_list
+
+    @staticmethod
+    def find_by_patient_id(patient_id):
+        """
+        根据病人的ID查找其所有的就诊记录
+        :param patient_id:
+        :return:
+        """
+        tx_type = 'patient_record'
+        id_name = 'patient_id'
+        return MedicalRecordService.find_by_relation(tx_type, patient_id, id_name)
+
+    @staticmethod
+    def find_by_doctor_id(doctor_id):
+        """
+        根据医生的ID查找其所有的就诊记录
+        :param doctor_id:
+        :return:
+        """
+        tx_type = 'doctor_record'
+        id_name = 'doctor_id'
+        return MedicalRecordService.find_by_relation(tx_type, doctor_id, id_name)

@@ -14,4 +14,8 @@ class TestMedicalRecordService(TestCase):
         tx_list = MedicalRecordService.find_by_patient_id(patient_id)
         print(tx_list)
 
+    def test_find_by_doctor_id(self):
+        doctor_id = '001'
+        tx_list = MedicalRecordService.find_by_doctor_id(doctor_id)
+        print(tx_list)
 
