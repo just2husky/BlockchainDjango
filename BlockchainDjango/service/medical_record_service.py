@@ -7,6 +7,7 @@ from ..entity.medical_record import MedicalRecord
 from ..util.const import RecordType
 from .transaction_service import TransactionService
 from .block_service import BlockService
+from .block_chain_service import BlockChainService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -34,3 +35,15 @@ class MedicalRecordService(object):
 
         last_block_id = BlockService.add_block([TransactionService.gen_tx(medical_record)])
         return last_block_id
+
+    @staticmethod
+    def find_by_id(record_id):
+        """
+        根据就诊记录的ID返回就诊记录的内容，以dict的形式。
+        若不存在，则返回None
+        :param record_id:
+        :return:
+        """
+        tx_type = 'medical_record'
+        return BlockChainService.find_content(record_id, tx_type)
+
