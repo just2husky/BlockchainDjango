@@ -19,6 +19,7 @@ from . import view, search, search2
 from .controller import login_controller
 from .controller.block_chain_controller import BlockChainController
 from .controller.patient_manager_controller import PatientManagerController
+from .controller.doctor_manager_controller import DoctorManagerController
 """
 Django url() 可以接收四个参数，分别是两个必选参数：regex、view 和两个可选参数：kwargs、name，接下来详细介绍这四个参数。
 regex: 正则表达式，与之匹配的 URL 会执行对应的第二个参数 view。
@@ -51,4 +52,7 @@ urlpatterns = [
 
     url(r'^to-patient-manager$', PatientManagerController.to_patient_manager),
     url(r'^get-patient-records$', PatientManagerController.get_patient_records),
+
+    url(r'^to-doctor-manager$', DoctorManagerController.to_doctor_manager),
+    url(r'^get-doctor-records$', DoctorManagerController.get_doctor_records),
 ]

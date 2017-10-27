@@ -7,6 +7,11 @@
 <body>
     <div style="width:100%;text-align:center">
         <label>医生管理</label>
+        <form action="/get-doctor-records" method="post">
+            医生编号: <input type="text" name="doctor_id">
+            <input type="submit" value="查询医生就诊记录">
+        </form>
+        {{ msg }}
     </div>
 
 </body>

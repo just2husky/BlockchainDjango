@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div style="width:100%;text-align:center">
+        {% for tx in tx_list %}
+        <table border="1" align="center">
+            <tr>
+                <th colspan="2">就诊信息</th>
+            </tr>
+            <tr>
+                <td>就诊记录ID: {{ tx.identifier }} </td>
+                <td>病人ID: {{ tx.patient_id }} </td>
+            </tr>
+            <tr>
+                <td>就诊时间: {{ tx.record_time }} </td>
+                <td>就诊地点: {{ tx.record_loc }} </td>
+
+            </tr>
+            <tr>
+                <td colspan="2">主诉: {{ tx.chief_complaint}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">现病史: {{ tx.present_illness_history}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">既往史：{{ tx.past_history }} </td>
+
+            </tr>
+        </table>
+        {% endfor %}
+        <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">
+        <input type="button" onclick="javascript:location.href='to-doctor-manager'" value="医生管理界面">
+    </div>
+</body>
+</html>
