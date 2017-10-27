@@ -123,3 +123,44 @@ class TransactionService(object):
         for each_transaction in transaction_list:
             id_list.append(each_transaction.get_id())
         return tuple(id_list)
+
+    @staticmethod
+    def find_tx_by_id(tx_id):
+        """
+        根据Transaction的id获取存储的数据库里的Transaction的信息，以dict的形式返回
+        :param tx_id:
+        :return:
+        """
+        # db = couchdb_util.get_db(Const.DB_NAME)
+        tx_doc = db[tx_id]
+        transaction_str = tx_doc['Transaction']
+        transaction_dict = eval(transaction_str)
+        return transaction_dict
+
+    @staticmethod
+    def find_txs_by_ids(tx_id_list):
+        """
+        根据tx_id_list)中所存储的所有tx的id查找相应的Transaction，并以list的形式返回
+        :param tx_id_list:
+        :return:
+        """
+        tx_dicts = []
+        for tx_id in tx_id_list:
+            tx_dicts.append(TransactionService.find_tx_by_id(tx_id))
+
+        return tx_dicts
+
+    @staticmethod
+    def find_contents_by_ids(tx_id_list):
+        """
+        根据tx_id_list)中所存储的所有tx的id查找相应的Transaction中的content内容，并以list的形式返回
+        :param tx_id_list:
+        :return:
+        """
+        tx_dicts = TransactionService.find_txs_by_ids(tx_id_list)
+        content_dicts = []
+        for tx_dict in tx_dicts:
+            tx_content = tx_dict['content']
+            content_dicts.append(eval(tx_content))
+
+        return content_dicts
