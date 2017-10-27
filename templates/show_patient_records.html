@@ -6,31 +6,48 @@
 </head>
 <body>
     <div style="width:100%;text-align:center">
-        {% for tx in tx_list %}
+        {% for record in record_info_list %}
         <table border="1" align="center">
             <tr>
                 <th colspan="2">就诊信息</th>
             </tr>
             <tr>
-                <td>就诊记录ID: {{ tx.identifier }} </td>
-                <td>就诊医生ID: {{ tx.doctor_id }} </td>
+                <td colspan="2">就诊记录ID: {{ record.identifier }} </td>
             </tr>
             <tr>
-                <td>就诊时间: {{ tx.record_time }} </td>
-                <td>就诊地点: {{ tx.record_loc }} </td>
+                <td>医生编号: {{ record.doctor.identifier }} </td>
+                <td>姓名: {{ record.doctor.name }} </td>
+            </tr>
+            <tr>
+                <td>性别: {{ record.doctor.gender }} </td>
+                <td>年龄: {{ record.doctor.age }} </td>
 
             </tr>
             <tr>
-                <td colspan="2">主诉: {{ tx.chief_complaint}}</td>
+                <td>民族: {{ record.doctor.nation}}</td>
+                <td>医院: {{ record.doctor.hospital }}</td>
             </tr>
             <tr>
-                <td colspan="2">现病史: {{ tx.present_illness_history}}</td>
+                <td>科室: {{ record.doctor.department }}</td>
+                <td>级别: {{ record.doctor.grade }}</td>
             </tr>
             <tr>
-                <td colspan="2">既往史：{{ tx.past_history }} </td>
+                <td>就诊时间: {{ record.record_time }} </td>
+                <td>就诊地点: {{ record.record_loc }} </td>
+
+            </tr>
+            <tr>
+                <td colspan="2">主诉: {{ record.chief_complaint}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">现病史: {{ record.present_illness_history}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">既往史：{{ record.past_history }} </td>
 
             </tr>
         </table>
+            <br><br>
         {% endfor %}
         <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">
         <input type="button" onclick="javascript:location.href='to-patient-manager'" value="病人管理界面">

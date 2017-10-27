@@ -18,6 +18,7 @@ from ..entity.patient_record import PatientRecord
 from ..entity.patient_last_record import PatientLastRecord
 from ..entity.doctor_record import DoctorRecord
 from ..entity.doctor_last_record import DoctorLastRecord
+# from .patient_service import PatientService
 
 db = couchdb_util.get_db(Const.DB_NAME)
 
@@ -161,6 +162,13 @@ class TransactionService(object):
         content_dicts = []
         for tx_dict in tx_dicts:
             tx_content = tx_dict['content']
-            content_dicts.append(eval(tx_content))
+            tx_content_dict = eval(tx_content)
+            # patient_id = tx_content_dict['patient_id']
+            # logger.info('patient_id: ' + patient_id)
+
+            # 根据就诊记录里的patient_id来获取对应病人的具体信息，并追加到就诊记录dict当中返回
+            # patient_dict = PatientService.find_by_id(patient_id)
+            # tx_content_dict.update({'patient': patient_dict})
+            content_dicts.append(tx_content_dict)
 
         return content_dicts

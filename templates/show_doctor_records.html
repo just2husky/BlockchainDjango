@@ -6,31 +6,47 @@
 </head>
 <body>
     <div style="width:100%;text-align:center">
-        {% for tx in tx_list %}
+        {% for record in record_info_list %}
         <table border="1" align="center">
             <tr>
                 <th colspan="2">就诊信息</th>
             </tr>
             <tr>
-                <td>就诊记录ID: {{ tx.identifier }} </td>
-                <td>病人ID: {{ tx.patient_id }} </td>
+                <td colspan="2">就诊记录ID: {{ record.identifier }} </td>
             </tr>
             <tr>
-                <td>就诊时间: {{ tx.record_time }} </td>
-                <td>就诊地点: {{ tx.record_loc }} </td>
+                <td>病人ID: {{ record.patient_id }} </td>
+                <td>姓名: {{  record.patient.name }} </td>
+            </tr>
+            <tr>
+                <td>性别: {{  record.patient.gender }} </td>
+                <td>年龄: {{  record.patient.age }} </td>
 
             </tr>
             <tr>
-                <td colspan="2">主诉: {{ tx.chief_complaint}}</td>
+                <td>民族: {{  record.patient.nation}}</td>
+                <td>出生地: {{  record.patient.born_loc }}</td>
             </tr>
             <tr>
-                <td colspan="2">现病史: {{ tx.present_illness_history}}</td>
+                <td colspan="2">现居地: {{  record.patient.address }}</td>
             </tr>
             <tr>
-                <td colspan="2">既往史：{{ tx.past_history }} </td>
+                <td>就诊时间: {{ record.record_time }} </td>
+                <td>就诊地点: {{ record.record_loc }} </td>
+
+            </tr>
+            <tr>
+                <td colspan="2">主诉: {{ record.chief_complaint}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">现病史: {{ record.present_illness_history}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">既往史：{{ record.past_history }} </td>
 
             </tr>
         </table>
+            <br><br>
         {% endfor %}
         <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">
         <input type="button" onclick="javascript:location.href='to-doctor-manager'" value="医生管理界面">
