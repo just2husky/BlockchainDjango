@@ -50,6 +50,7 @@ urlpatterns = [
 
     url(r'^to-add-medical-record$', BlockChainController.to_add_medical_record),
     url(r'^add-medical-record$', BlockChainController.add_medical_record),
+    url(r'^del-medical-record$', PatientManagerController.del_medical_record),
 
     url(r'^to-patient-manager$', PatientManagerController.to_patient_manager),
     url(r'^get-patient-records$', PatientManagerController.get_patient_records),

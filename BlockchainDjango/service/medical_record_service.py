@@ -6,6 +6,7 @@ import time
 from ..entity.medical_record import MedicalRecord
 from ..entity.patient_record import PatientRecord
 from ..entity.doctor_record import DoctorRecord
+from ..entity.medical_record_del import MedicalRecordDel
 
 from ..util.const import RecordType
 from ..util import couchdb_util
@@ -144,3 +145,15 @@ class MedicalRecordService(object):
         tx_type = 'doctor_record'
         id_name = 'doctor_id'
         return MedicalRecordService.find_by_relation(tx_type, doctor_id, id_name)
+
+    @staticmethod
+    def del_by_tx_id(tx_id, operator_id):
+        """
+        根据tx_id来删除对应id的就诊记录，删除指的是新建一条medical_record_del交易单存入到区块链系统中
+        :param tx_id:
+        :param operator_id:
+        :return:
+        """
+        medical_record_del = MedicalRecordDel(tx_id, operator_id)
+        last_block_id = BlockService.add_block([TransactionService.gen_tx(medical_record_del)])
+        return last_block_id

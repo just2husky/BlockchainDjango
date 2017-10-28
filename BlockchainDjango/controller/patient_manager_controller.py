@@ -50,3 +50,12 @@ class PatientManagerController(object):
         else:
             return render(request, 'patient-manager.html', {'msg': '该病人没有任何就诊记录'})
 
+    @staticmethod
+    def del_medical_record(request):
+        tx_id = request.GET['record_tx_id']
+        operator_id = request.GET['patient_id']
+        logger.info('tx_id: ' + tx_id)
+        logger.info('patient_id: ' + operator_id)
+        MedicalRecordService.del_by_tx_id(tx_id, operator_id)
+        return render(request, 'patient-manager.html', {'msg': '删除' + tx_id + "成功"})
+

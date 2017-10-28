@@ -46,7 +46,17 @@
                 <td colspan="2">既往史：{{ record.past_history }} </td>
 
             </tr>
+            <tr>
+                <td colspan="2">所在交易单ID：{{ record.tx_id }} </td>
+
+            </tr>
         </table>
+            <form>
+
+            </form>
+            <input type="button" onclick="javascript:location.href=
+                    'del-medical-record?record_tx_id={{ record.tx_id }} &patient_id={{ record.patient_id }}'"
+                   value="删除记录">
             <br><br>
         {% endfor %}
         <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">

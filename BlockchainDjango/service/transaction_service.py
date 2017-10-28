@@ -18,6 +18,7 @@ from ..entity.patient_record import PatientRecord
 from ..entity.patient_last_record import PatientLastRecord
 from ..entity.doctor_record import DoctorRecord
 from ..entity.doctor_last_record import DoctorLastRecord
+from ..entity.medical_record_del import MedicalRecordDel
 # from .patient_service import PatientService
 
 db = couchdb_util.get_db(Const.DB_NAME)
@@ -92,6 +93,10 @@ class TransactionService(object):
             logger.info("此 Transaction 存储的类型为 doctor_last_record")
             return 'doctor_last_record'
 
+        elif isinstance(content, MedicalRecordDel):
+            logger.info("此 Transaction 存储的类型为 medical_record_del")
+            return 'medical_record_del'
+
         elif isinstance(content, str):
             logger.info("此 Transaction 存储的类型为 string")
             return 'string'
@@ -136,6 +141,7 @@ class TransactionService(object):
         tx_doc = db[tx_id]
         transaction_str = tx_doc['Transaction']
         transaction_dict = eval(transaction_str)
+        transaction_dict['tx_id'] = tx_id
         return transaction_dict
 
     @staticmethod
@@ -163,6 +169,8 @@ class TransactionService(object):
         for tx_dict in tx_dicts:
             tx_content = tx_dict['content']
             tx_content_dict = eval(tx_content)
+            # 将该医疗记录的tx_id存入到所返回的dict中
+            tx_content_dict['tx_id'] = tx_dict['tx_id']
             # patient_id = tx_content_dict['patient_id']
             # logger.info('patient_id: ' + patient_id)
 
