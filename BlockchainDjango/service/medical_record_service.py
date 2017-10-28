@@ -92,6 +92,7 @@ class MedicalRecordService(object):
         :return:
         """
         record_list = []
+        deleted_record_list = []
 
         db = couchdb_util.get_db(Const.DB_NAME)
         doc = db[Const.LAST_BLOCK_ID]
@@ -118,6 +119,13 @@ class MedicalRecordService(object):
                         logger.info('Find ' + identifier + ', in transaction ' +
                                     transaction_dict['id'] + ', in block ' + doc['_id'])
                         record_list.append(content_dict['record_tx_id'])
+
+                if 'medical_record_del' == transaction_dict['tx_type']:
+                    content_str = transaction_dict['content']
+                    content_dict = eval(content_str)
+                    if len(record_list) and record_list[-1] == content_dict['tx_id']:
+                        del record_list[-1]
+
                 logger.info(transaction_str)
 
             doc = db[doc['pre_id']]
