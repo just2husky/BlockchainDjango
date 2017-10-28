@@ -8,7 +8,12 @@
     <div style="width:100%;text-align:center">
         <label>区块链管理</label>
         <br><br><br><br>
-        <p>{{ session.doctor_id }} 已登录</p>
+        {% if session.doctor_id != none %}
+            <p>{{ session.doctor_id }} 已登录 <a href="/logout">注销</a></p>
+        {% else %}
+            <p><a href="/log-page">登录</a></p>
+        {% endif %}
+
         <input type="button" onclick="javascript:location.href='blockchain-init'" value="初始化区块链">
         <br><br>
         <input type="button" onclick="javascript:location.href='to-add-patient'" value="添加病人">

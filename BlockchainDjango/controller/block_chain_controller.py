@@ -27,7 +27,7 @@ class BlockChainController(object):
 
     @staticmethod
     def manager(request):
-        return render_to_response('blockchain_manager.html')
+        return render(request, 'blockchain_manager.html', {'session': request.session})
 
     @staticmethod
     def to_add_patient(request):

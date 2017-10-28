@@ -23,5 +23,14 @@ def login(request):
             request.session['doctor_id'] = doctor_id
             return render(request, 'login_success.html',  {'session': request.session})
         else:
-            return render(request, 'login_error.html')
+            return render(request, 'login_error.html',  {'session': request.session})
 
+
+def logout(request):
+    """
+    注销
+    :param request:
+    :return:
+    """
+    del request.session['doctor_id']  #删除session
+    return render(request, 'blockchain_manager.html', {'msg': '注销成功'})

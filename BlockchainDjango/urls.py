@@ -35,6 +35,7 @@ urlpatterns = [
 
     url(r'^log-page$', login_controller.log_page),
     url(r'^login$', login_controller.login),
+    url(r'^logout$', login_controller.logout),
 
     url(r'^blockchain-manager$', BlockChainController.manager),
     url(r'^blockchain-init$', BlockChainController.init),

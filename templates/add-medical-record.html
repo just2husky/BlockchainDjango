@@ -10,7 +10,7 @@
             {% csrf_token %}
             <br><br>
             <label>添加就诊记录界面</label> <br><br>
-            医生ID: {{ session.doctor_id }} <br><br>
+            医生ID: {{ session.doctor_id }} <a href="/logout">注销</a><br><br>
             <table border="1" align="center">
                 <tr>
                     <th colspan="2">病人信息</th>
