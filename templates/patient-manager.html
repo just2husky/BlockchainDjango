@@ -11,6 +11,11 @@
             证件号: <input type="text" name="patient_id">
             <input type="submit" value="查询病人就诊记录">
         </form>
+        <br>
+        <form action="/get-patient-del-records" method="post">
+            证件号: <input type="text" name="patient_id">
+            <input type="submit" value="查询病人被删除的就诊记录">
+        </form>
         {{ msg }}
         <br><br>
         <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">

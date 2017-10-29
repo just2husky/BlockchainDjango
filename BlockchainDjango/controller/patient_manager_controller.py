@@ -10,6 +10,8 @@ from ..service.medical_record_service import MedicalRecordService
 from ..service.transaction_service import TransactionService
 from ..service.doctor_service import DoctorService
 
+from ..util.const import OperatorType, FindRecordType
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -29,8 +31,8 @@ class PatientManagerController(object):
         rtn_msg = {}
         if request.POST:
             patient_id = request.POST['patient_id']
-            remove_deleted_record = True
-            tx_id_list = MedicalRecordService.find_by_patient_id(patient_id, remove_deleted_record)
+            find_record_type = FindRecordType.NORMAL.value
+            tx_id_list = MedicalRecordService.find_by_patient_id(patient_id, find_record_type)
             record_info_list = TransactionService.find_contents_by_ids(tx_id_list)
 
             # 根据就诊记录里的doctor_id来获取对应医生的具体信息，并追加到就诊记录dict当中返回
@@ -52,11 +54,47 @@ class PatientManagerController(object):
             return render(request, 'patient-manager.html', {'msg': '该病人没有任何就诊记录'})
 
     @staticmethod
+    @csrf_exempt
+    def get_patient_del_records(request):
+        rtn_msg = {}
+        if request.POST:
+            patient_id = request.POST['patient_id']
+            find_record_type = FindRecordType.DELETED.value
+            tx_id_list = MedicalRecordService.find_by_patient_id(patient_id, find_record_type)
+            record_info_list = TransactionService.find_contents_by_ids(tx_id_list)
+
+            # 根据就诊记录里的doctor_id来获取对应医生的具体信息，并追加到就诊记录dict当中返回
+            for record in record_info_list:
+                doctor_id = record['doctor_id']
+                doctor_dict = DoctorService.find_by_id(doctor_id)
+                record['doctor'] = doctor_dict
+
+            logger.info('tx_id_list: ' + str(tx_id_list))
+            logger.info('record_info_list' + str(record_info_list))
+            rtn_msg['record_info_list'] = record_info_list.copy()
+
+        # 判断record_info_list是为None或是否为空
+        if rtn_msg['record_info_list'] is not None and len(rtn_msg['record_info_list']):
+            logger.info('rtn_msg: ' + str(rtn_msg))
+            return render(request, 'show_patient_del_records.html', rtn_msg)
+
+        else:
+            return render(request, 'patient-manager.html', {'msg': '该病人没有任何删除的就诊记录'})
+
+    @staticmethod
+    def get_records_with_doc_info():
+        pass
+
+    @staticmethod
     def del_medical_record(request):
-        tx_id = request.GET['record_tx_id']
-        operator_id = request.GET['patient_id']
-        logger.info('tx_id: ' + tx_id)
-        logger.info('patient_id: ' + operator_id)
-        MedicalRecordService.del_by_tx_id(tx_id, operator_id)
-        return render(request, 'patient-manager.html', {'msg': '删除' + tx_id + "成功"})
+        if request.GET:
+            tx_id = request.GET['record_tx_id']
+            operator_id = request.GET['patient_id']
+            logger.info('tx_id: ' + tx_id)
+            logger.info('patient_id: ' + operator_id)
+            operator_type = OperatorType.PATIENT.value
+            MedicalRecordService.del_by_tx_id(tx_id, operator_type, operator_id)
+            return render(request, 'patient-manager.html', {'msg': '删除' + tx_id + "成功"})
+
+        return render_to_response('error.html')
 

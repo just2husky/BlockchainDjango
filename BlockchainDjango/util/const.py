@@ -16,3 +16,24 @@ class Const(object):
 class RecordType(Enum):
     """表示就诊记录的类型"""
     ADD = 'add'
+
+
+@unique
+class OperatorType(Enum):
+    """表示就诊记录的类型"""
+    PATIENT = 'patient'
+    DOCTOR = 'doctor'
+
+
+@unique
+class FindRecordType(Enum):
+    """
+    查找就诊记录时的类型
+    """
+    ALL = 'all'
+    # 表示去除被删除和被更新记录
+    NORMAL = 'normal'
+    DELETED = 'deleted'
+    # 被更新过的记录
+    UPDATED = 'updated'
+

@@ -54,6 +54,7 @@ urlpatterns = [
 
     url(r'^to-patient-manager$', PatientManagerController.to_patient_manager),
     url(r'^get-patient-records$', PatientManagerController.get_patient_records),
+    url(r'^get-patient-del-records$', PatientManagerController.get_patient_del_records),
 
     url(r'^to-doctor-manager$', DoctorManagerController.to_doctor_manager),
     url(r'^get-doctor-records$', DoctorManagerController.get_doctor_records),
