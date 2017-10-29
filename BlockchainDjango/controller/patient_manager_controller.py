@@ -11,6 +11,7 @@ from ..service.transaction_service import TransactionService
 from ..service.doctor_service import DoctorService
 
 from ..util.const import OperatorType, FindRecordType
+from ..util.time_util import get_format_time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -65,21 +66,20 @@ class PatientManagerController(object):
             tx_id_list, deleted_record_tx_id_list = \
                 MedicalRecordService.find_by_patient_id(patient_id, find_record_type)
             record_info_list = TransactionService.find_contents_by_ids(deleted_record_tx_id_list)
-            for record_info in record_info_list:
-                tx_id = record_info['tx_id']
-                logger.info('tx_id: ' + tx_id)
-                record_info['record_del_info'] = TransactionService.find_contents_by_id(tx_id)
-
-            # 根据就诊记录里的doctor_id来获取对应医生的具体信息，并追加到就诊记录dict当中返回
             for record in record_info_list:
+                record['timestamp'] = get_format_time(record['timestamp'])
+                # 根据就诊记录里的tx_id来获取已被删除的 就诊记录的信息
+                tx_id = record['tx_id']
+                logger.info('tx_id: ' + tx_id)
+                record['record_del_info'] = TransactionService.find_contents_by_id(tx_id)
+
+                # 根据就诊记录里的doctor_id来获取对应医生的具体信息，并追加到就诊记录dict当中返回
                 doctor_id = record['doctor_id']
                 doctor_dict = DoctorService.find_by_id(doctor_id)
                 record['doctor'] = doctor_dict
 
             logger.info('tx_id_list: ' + str(tx_id_list))
             logger.info('record_info_list' + str(record_info_list))
-            # logger.info('deleted_record_tx_id_list: ' + str(deleted_record_tx_id_list))
-            # logger.info('record_del_info_list' + str(record_del_info_list))
 
             rtn_msg['record_info_list'] = record_info_list.copy()
 

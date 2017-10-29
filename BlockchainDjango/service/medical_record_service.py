@@ -149,8 +149,10 @@ class MedicalRecordService(object):
 
         if find_record_type == FindRecordType.NORMAL.value or find_record_type == FindRecordType.ALL.value:
             return record_list
+
         elif find_record_type == FindRecordType.DELETED.value:
             return deleted_record_list, deleted_record_tx_id_list
+
         else:
             raise Exception('未处理的find_record_type！')
 

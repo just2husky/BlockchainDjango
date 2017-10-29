@@ -167,8 +167,9 @@ class TransactionService(object):
         tx_dict = TransactionService.find_tx_by_id(tx_id)
         tx_content = tx_dict['content']
         tx_content_dict = eval(tx_content)
-        # 将该医疗记录的tx_id存入到所返回的dict中
-        tx_content_dict['tx_id'] = tx_dict['tx_id']
+        # 将该医疗记录的tx_id和timestamp存入到所返回的dict中
+        tx_content_dict['in_tx_id'] = tx_dict['tx_id']
+        tx_content_dict['timestamp'] = tx_dict['timestamp']
 
         return tx_content_dict
 
@@ -184,14 +185,9 @@ class TransactionService(object):
         for tx_dict in tx_dicts:
             tx_content = tx_dict['content']
             tx_content_dict = eval(tx_content)
-            # 将该医疗记录的tx_id存入到所返回的dict中
-            tx_content_dict['store_tx_id'] = tx_dict['tx_id']
-            # patient_id = tx_content_dict['patient_id']
-            # logger.info('patient_id: ' + patient_id)
-
-            # 根据就诊记录里的patient_id来获取对应病人的具体信息，并追加到就诊记录dict当中返回
-            # patient_dict = PatientService.find_by_id(patient_id)
-            # tx_content_dict.update({'patient': patient_dict})
+            # 将该医疗记录的tx_id和timestamp存入到所返回的dict中
+            tx_content_dict['in_tx_id'] = tx_dict['tx_id']
+            tx_content_dict['timestamp'] = tx_dict['timestamp']
             content_dicts.append(tx_content_dict)
 
         return content_dicts

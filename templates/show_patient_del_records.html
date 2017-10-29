@@ -16,6 +16,12 @@
                 <td>删除者id: {{ record.operator_id }} </td>
             </tr>
             <tr>
+                <td colspan="2">删除时间: {{ record.timestamp }} </td>
+            </tr>
+            <tr>
+                <td colspan="2">删除信息所在交易单: {{ record.in_tx_id }} </td>
+            </tr>
+            <tr>
                 <td colspan="2">就诊记录ID: {{ record.record_del_info.identifier }} </td>
             </tr>
             <tr>
@@ -51,7 +57,7 @@
 
             </tr>
             <tr>
-                <td colspan="2">所在交易单ID：{{ record.record_del_info.tx_id }} </td>
+                <td colspan="2">病历所在交易单ID：{{ record.record_del_info.in_tx_id }} </td>
 
             </tr>
         </table>
