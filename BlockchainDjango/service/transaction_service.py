@@ -158,6 +158,21 @@ class TransactionService(object):
         return tx_dicts
 
     @staticmethod
+    def find_contents_by_id(tx_id):
+        """
+        根据tx_id_list)中所存储的所有tx的id查找相应的Transaction中的content内容，并以list的形式返回
+        :param tx_id:
+        :return:
+        """
+        tx_dict = TransactionService.find_tx_by_id(tx_id)
+        tx_content = tx_dict['content']
+        tx_content_dict = eval(tx_content)
+        # 将该医疗记录的tx_id存入到所返回的dict中
+        tx_content_dict['tx_id'] = tx_dict['tx_id']
+
+        return tx_content_dict
+
+    @staticmethod
     def find_contents_by_ids(tx_id_list):
         """
         根据tx_id_list)中所存储的所有tx的id查找相应的Transaction中的content内容，并以list的形式返回
@@ -170,7 +185,7 @@ class TransactionService(object):
             tx_content = tx_dict['content']
             tx_content_dict = eval(tx_content)
             # 将该医疗记录的tx_id存入到所返回的dict中
-            tx_content_dict['tx_id'] = tx_dict['tx_id']
+            tx_content_dict['store_tx_id'] = tx_dict['tx_id']
             # patient_id = tx_content_dict['patient_id']
             # logger.info('patient_id: ' + patient_id)
 

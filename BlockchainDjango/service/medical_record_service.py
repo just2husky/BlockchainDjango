@@ -94,6 +94,7 @@ class MedicalRecordService(object):
         """
         record_list = []
         deleted_record_list = []
+        deleted_record_tx_id_list = []
 
         db = couchdb_util.get_db(Const.DB_NAME)
         doc = db[Const.LAST_BLOCK_ID]
@@ -132,6 +133,8 @@ class MedicalRecordService(object):
                     # 则将该 medical_record_del 中记录的 tx_id 加入到 deleted_record_list 中
                     if identifier == del_record_dict[id_name]:
                         deleted_record_list.append(del_record_dict['tx_id'])
+                        # tx_doc['_id'] 的内容为当前交易单的id
+                        deleted_record_tx_id_list.append(tx_doc['_id'])
 
                 logger.info(transaction_str)
 
@@ -147,7 +150,7 @@ class MedicalRecordService(object):
         if find_record_type == FindRecordType.NORMAL.value or find_record_type == FindRecordType.ALL.value:
             return record_list
         elif find_record_type == FindRecordType.DELETED.value:
-            return deleted_record_list
+            return deleted_record_list, deleted_record_tx_id_list
         else:
             raise Exception('未处理的find_record_type！')
 

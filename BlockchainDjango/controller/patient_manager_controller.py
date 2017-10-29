@@ -60,8 +60,15 @@ class PatientManagerController(object):
         if request.POST:
             patient_id = request.POST['patient_id']
             find_record_type = FindRecordType.DELETED.value
-            tx_id_list = MedicalRecordService.find_by_patient_id(patient_id, find_record_type)
-            record_info_list = TransactionService.find_contents_by_ids(tx_id_list)
+            # tx_id_list 用于保存 MedicalRecord 类型 transaction 的 id
+            # deleted_record_tx_id_list用于保存MedicalRecordDel 类型 transaction 的 id
+            tx_id_list, deleted_record_tx_id_list = \
+                MedicalRecordService.find_by_patient_id(patient_id, find_record_type)
+            record_info_list = TransactionService.find_contents_by_ids(deleted_record_tx_id_list)
+            for record_info in record_info_list:
+                tx_id = record_info['tx_id']
+                logger.info('tx_id: ' + tx_id)
+                record_info['record_del_info'] = TransactionService.find_contents_by_id(tx_id)
 
             # 根据就诊记录里的doctor_id来获取对应医生的具体信息，并追加到就诊记录dict当中返回
             for record in record_info_list:
@@ -71,6 +78,9 @@ class PatientManagerController(object):
 
             logger.info('tx_id_list: ' + str(tx_id_list))
             logger.info('record_info_list' + str(record_info_list))
+            # logger.info('deleted_record_tx_id_list: ' + str(deleted_record_tx_id_list))
+            # logger.info('record_del_info_list' + str(record_del_info_list))
+
             rtn_msg['record_info_list'] = record_info_list.copy()
 
         # 判断record_info_list是为None或是否为空
