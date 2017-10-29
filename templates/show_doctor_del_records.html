@@ -9,10 +9,20 @@
         {% for record in record_info_list %}
         <table border="1" align="center">
             <tr>
-                <th colspan="2">就诊信息</th>
+                <th colspan="2">已删除的就诊信息</th>
             </tr>
             <tr>
-                <td colspan="2">就诊记录ID: {{ record.identifier }} </td>
+                <td>删除者类别: {{ record.operator_type }} </td>
+                <td>删除者id: {{ record.operator_id }} </td>
+            </tr>
+            <tr>
+                <td colspan="2">删除时间: {{ record.timestamp }} </td>
+            </tr>
+            <tr>
+                <td colspan="2">删除信息所在交易单: {{ record.in_tx_id }} </td>
+            </tr>
+            <tr>
+                <td colspan="2">就诊记录ID: {{ record.record_del_info.identifier }} </td>
             </tr>
             <tr>
                 <td>病人ID: {{ record.patient_id }} </td>
@@ -31,21 +41,21 @@
                 <td colspan="2">现居地: {{  record.patient.address }}</td>
             </tr>
             <tr>
-                <td>就诊时间: {{ record.record_time }} </td>
-                <td>就诊地点: {{ record.record_loc }} </td>
+                <td>就诊时间: {{ record.record_del_info.record_time }} </td>
+                <td>就诊地点: {{ record.record_del_info.record_loc }} </td>
 
             </tr>
             <tr>
-                <td colspan="2">主诉: {{ record.chief_complaint}}</td>
+                <td colspan="2">主诉: {{ record.record_del_info.chief_complaint}}</td>
             </tr>
             <tr>
-                <td colspan="2">现病史: {{ record.present_illness_history}}</td>
+                <td colspan="2">现病史: {{ record.record_del_info.present_illness_history}}</td>
             </tr>
             <tr>
-                <td colspan="2">既往史：{{ record.past_history }} </td>
+                <td colspan="2">既往史：{{ record.record_del_info.past_history }} </td>
             </tr>
             <tr>
-                <td colspan="2">所在交易单ID：{{ record.in_tx_id }} </td>
+                <td colspan="2">所在交易单ID：{{ record.record_del_info.in_tx_id }} </td>
             </tr>
         </table>
             <br><br>
