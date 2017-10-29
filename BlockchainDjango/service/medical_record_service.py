@@ -83,12 +83,13 @@ class MedicalRecordService(object):
         return doctor_record_tx
 
     @staticmethod
-    def find_by_relation(tx_type, identifier, id_name):
+    def find_by_relation(tx_type, identifier, id_name, remove_deleted_record=False):
         """
         根据 tx_type, identifier, id_name 来查找对应 transaction 的 id，存入list中并返回
         :param tx_type:
         :param identifier: 如patient_id, doctor_id
         :param id_name: 如'patient_id', 'doctor_id'
+        :param remove_deleted_record: 默认不去除被删除的记录
         :return:
         """
         record_list = []
@@ -120,39 +121,51 @@ class MedicalRecordService(object):
                                     transaction_dict['id'] + ', in block ' + doc['_id'])
                         record_list.append(content_dict['record_tx_id'])
 
-                if 'medical_record_del' == transaction_dict['tx_type']:
-                    content_str = transaction_dict['content']
-                    content_dict = eval(content_str)
-                    if len(record_list) and record_list[-1] == content_dict['tx_id']:
-                        del record_list[-1]
+                # 检查 remove_deleted_record 开关是否打开，若打开则从 record_list 中去除已经被删除的
+                # 就诊记录的tx_id
+                if remove_deleted_record and 'medical_record_del' == transaction_dict['tx_type']:
+                    del_record_dict = eval(transaction_dict['content'])
+                    # 如果传入的 id 与 medical_record_del 中记录的，对应id_name的id相同时，
+                    # 则将该 medical_record_del 中记录的 tx_id 加入到 deleted_record_list 中
+                    if identifier == del_record_dict[id_name]:
+                        deleted_record_list.append(del_record_dict['tx_id'])
 
                 logger.info(transaction_str)
 
             doc = db[doc['pre_id']]
 
+        logger.info('deleted_record_list: ' + str(deleted_record_list))
+        logger.info('record_list: ' + str(record_list))
+        # 从 record_list 中去除已被删除的元素
+        if remove_deleted_record:
+            for deleted_record in deleted_record_list:
+                record_list.remove(deleted_record)
+
         return record_list
 
     @staticmethod
-    def find_by_patient_id(patient_id):
+    def find_by_patient_id(patient_id, remove_deleted_record=False):
         """
         根据病人的ID查找其所有的就诊记录
         :param patient_id:
+        :param remove_deleted_record: 默认不去除被删除的记录
         :return:
         """
         tx_type = 'patient_record'
         id_name = 'patient_id'
-        return MedicalRecordService.find_by_relation(tx_type, patient_id, id_name)
+        return MedicalRecordService.find_by_relation(tx_type, patient_id, id_name, remove_deleted_record)
 
     @staticmethod
-    def find_by_doctor_id(doctor_id):
+    def find_by_doctor_id(doctor_id, remove_deleted_record=False):
         """
         根据医生的ID查找其所有的就诊记录
         :param doctor_id:
+        :param remove_deleted_record: 默认不去除被删除的记录
         :return:
         """
         tx_type = 'doctor_record'
         id_name = 'doctor_id'
-        return MedicalRecordService.find_by_relation(tx_type, doctor_id, id_name)
+        return MedicalRecordService.find_by_relation(tx_type, doctor_id, id_name, remove_deleted_record)
 
     @staticmethod
     def del_by_tx_id(tx_id, operator_id):
@@ -162,6 +175,10 @@ class MedicalRecordService(object):
         :param operator_id:
         :return:
         """
-        medical_record_del = MedicalRecordDel(tx_id, operator_id)
+        tx_dict = TransactionService.find_tx_by_id(tx_id)
+        record_dict = eval(tx_dict['content'])
+        patient_id = record_dict['patient_id']
+        doctor_id = record_dict['doctor_id']
+        medical_record_del = MedicalRecordDel(tx_id, operator_id, patient_id, doctor_id)
         last_block_id = BlockService.add_block([TransactionService.gen_tx(medical_record_del)])
         return last_block_id

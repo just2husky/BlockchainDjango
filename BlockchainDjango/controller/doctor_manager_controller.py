@@ -29,7 +29,8 @@ class DoctorManagerController(object):
         rtn_msg = {}
         if request.POST:
             doctor_id = request.POST['doctor_id']
-            tx_id_list = MedicalRecordService.find_by_doctor_id(doctor_id)
+            remove_deleted_record = True
+            tx_id_list = MedicalRecordService.find_by_doctor_id(doctor_id, remove_deleted_record)
             record_info_list = TransactionService.find_contents_by_ids(tx_id_list)
 
             # 根据就诊记录里的patient_id来获取对应病人的具体信息，并追加到就诊记录dict当中返回
