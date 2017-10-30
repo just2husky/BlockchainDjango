@@ -196,3 +196,15 @@ class MedicalRecordService(object):
         medical_record_del = MedicalRecordDel(tx_id, operator_type, operator_id, patient_id, doctor_id)
         last_block_id = BlockService.add_block([TransactionService.gen_tx(medical_record_del)])
         return last_block_id
+
+    @staticmethod
+    def modify_record_fields(record_dict, rtn_fields_dict):
+        """
+        若record_dict与rtn_fields_dict中对应键的值不同，则用rtn_fields_dict中的值更新record_dict中的值
+        :param record_dict:
+        :param rtn_fields_dict:
+        :return:
+        """
+        for key in rtn_fields_dict:
+            if record_dict[key] != rtn_fields_dict[key]:
+                record_dict[key] = rtn_fields_dict[key]

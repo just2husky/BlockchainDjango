@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>区块链系统</title>
+</head>
+<body>
+    <div style="width:100%;text-align:center">
+        <form action="update-medical-record" method="post">
+            <table border="1" align="center">
+                <tr>
+                    <th colspan="2">就诊信息</th>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        就诊记录ID: {{ record.identifier }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>医生编号: {{ record.doctor_id }} </td>
+                    <td>姓名: {{ doctor.name }} </td>
+                </tr>
+                <tr>
+                    <td>性别: {{ doctor.gender }} </td>
+                    <td>年龄: {{ doctor.age }} </td>
+
+                </tr>
+                <tr>
+                    <td>民族: {{ doctor.nation}}</td>
+                    <td>医院: {{ doctor.hospital }}</td>
+                </tr>
+                <tr>
+                    <td>科室: {{ doctor.department }}</td>
+                    <td>级别: {{ doctor.grade }}</td>
+                </tr>
+                <tr>
+                    <td>就诊时间: <input type="text" name="record_time" value="{{ record.record_time }}">  </td>
+                    <td>就诊地点: <input type="text" name="record_loc" value="{{ record.record_loc }}"> </td>
+
+                </tr>
+                <tr align="left" >
+                        <td colspan="2">
+                            主诉: <textarea name="chief_complaint" rows="10" cols="60">{{ record.chief_complaint }}</textarea>
+                        </td>
+                    </tr>
+                    <tr align="left">
+                        <td colspan="2">
+                            现病史: <textarea name="present_illness_history" rows="10" cols="60">{{ record.present_illness_history }}</textarea>
+                        </td>
+                    </tr>
+                    <tr align="left">
+                        <td colspan="2">
+                            既往史: <textarea name="past_history" rows="10" cols="60">{{ record.past_history }}</textarea>
+                        </td>
+                    </tr>
+                <tr>
+                    <td colspan="2">
+                        所在交易单ID：{{ record.in_tx_id }}
+                        <input type="text" name="record_tx_id" value="{{ record.in_tx_id }}">
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <input type="submit" value="完成修改">
+        </form>
+
+            <br><br>
+        <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">
+        <input type="button" onclick="javascript:location.href='to-patient-manager'" value="病人管理界面">
+    </div>
+</body>
+</html>

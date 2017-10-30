@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>区块链系统</title>
 </head>
 <body>
     <div style="width:100%;text-align:center">
@@ -37,10 +37,10 @@
 
             </tr>
             <tr>
-                <td colspan="2">主诉: {{ record.chief_complaint}}</td>
+                <td colspan="2">主诉: {{ record.chief_complaint }}</td>
             </tr>
             <tr>
-                <td colspan="2">现病史: {{ record.present_illness_history}}</td>
+                <td colspan="2">现病史: {{ record.present_illness_history }}</td>
             </tr>
             <tr>
                 <td colspan="2">既往史：{{ record.past_history }} </td>
@@ -50,12 +50,12 @@
                 <td colspan="2">所在交易单ID：{{ record.in_tx_id }} </td>
             </tr>
         </table>
-            <form>
-
-            </form>
             <input type="button" onclick="javascript:location.href=
                     'del-medical-record?record_tx_id={{ record.tx_id }}&patient_id={{ record.patient_id }}'"
                    value="删除记录">
+            <input type="button" onclick="javascript:location.href=
+                    'to-update-medical-record?record_tx_id={{ record.in_tx_id }}'"
+                   value="更改记录">
             <br><br>
         {% endfor %}
         <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">

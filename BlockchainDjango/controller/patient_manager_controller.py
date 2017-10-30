@@ -108,3 +108,42 @@ class PatientManagerController(object):
 
         return render_to_response('error.html')
 
+    @staticmethod
+    def to_update_medical_record(request):
+        if request.GET:
+            record_tx_id = request.GET['record_tx_id']
+            logger.info('tx_id: ' + record_tx_id)
+            record_dict = TransactionService.find_contents_by_id(record_tx_id)
+
+            doctor_id = record_dict['doctor_id']
+            doctor_dict = DoctorService.find_by_id(doctor_id)
+
+            return render(request, 'update_medical_record.html', {'record': record_dict, 'doctor': doctor_dict})
+
+        return render_to_response('error.html')
+
+    @staticmethod
+    @csrf_exempt
+    def update_medical_record(request):
+        if request.POST:
+            record_tx_id = request.POST['record_tx_id']
+            logger.info('tx_id: ' + record_tx_id)
+            record_dict = TransactionService.find_contents_by_id(record_tx_id)
+            # 将html里传入的字段保存在rtn_fields_dict中
+            rtn_fields_dict = {
+                'record_time': request.POST['record_time'].strip(),
+                'record_loc': request.POST['record_loc'].strip(),
+                'chief_complaint': request.POST['chief_complaint'].strip(),
+                'present_illness_history': request.POST['present_illness_history'].strip(),
+                'past_history': request.POST['past_history'].strip()
+            }
+            # 更新 record_dict，下面函数会直接更改 record_dict，而不需要返回值
+            MedicalRecordService.modify_record_fields(record_dict, rtn_fields_dict)
+
+            doctor_id = record_dict['doctor_id']
+            doctor_dict = DoctorService.find_by_id(doctor_id)
+
+            return render(request, 'show_patient_record.html', {'record': record_dict, 'doctor': doctor_dict})
+
+        return render_to_response('error.html')
+
