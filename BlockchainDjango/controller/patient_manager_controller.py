@@ -126,6 +126,7 @@ class PatientManagerController(object):
     @csrf_exempt
     def update_medical_record(request):
         if request.POST:
+            # 1. 根据更改的字段构建新的 MedicalRecord 对象
             record_tx_id = request.POST['record_tx_id']
             logger.info('tx_id: ' + record_tx_id)
             record_dict = TransactionService.find_contents_by_id(record_tx_id)
@@ -137,13 +138,23 @@ class PatientManagerController(object):
                 'present_illness_history': request.POST['present_illness_history'].strip(),
                 'past_history': request.POST['past_history'].strip()
             }
+
+            # 2. 保存旧的就诊记录，后，更新
+            old_record_dict = record_dict.copy()
             # 更新 record_dict，下面函数会直接更改 record_dict，而不需要返回值
             MedicalRecordService.modify_record_fields(record_dict, rtn_fields_dict)
 
+            # 3. 保存新的就诊记录，以及新旧记录的关系，到区块链中
+            operator_id = old_record_dict['patient_id']
+            operator_type = OperatorType.PATIENT.value
+            last_block_id = MedicalRecordService.update_record(old_record_dict, record_dict, operator_type, operator_id)
+            logger.info('last_block_id: ' + last_block_id)
+            # 4. 获取医生的信息
             doctor_id = record_dict['doctor_id']
             doctor_dict = DoctorService.find_by_id(doctor_id)
 
-            return render(request, 'show_patient_record.html', {'record': record_dict, 'doctor': doctor_dict})
+            return render(request, 'show_patient_record.html', {'record': record_dict, 'doctor': doctor_dict,
+                                                                'block_id': last_block_id})
 
         return render_to_response('error.html')
 

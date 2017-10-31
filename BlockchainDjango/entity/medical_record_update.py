@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 
-class MedicalRecordDel(object):
+class MedicalRecordUpdate(object):
     """
     记录被删除的就诊记录的id，删除者的id
     """

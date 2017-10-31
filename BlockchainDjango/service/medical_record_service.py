@@ -7,6 +7,7 @@ from ..entity.medical_record import MedicalRecord
 from ..entity.patient_record import PatientRecord
 from ..entity.doctor_record import DoctorRecord
 from ..entity.medical_record_del import MedicalRecordDel
+from ..entity.medical_record_update import MedicalRecordUpdate
 
 from ..util.const import RecordType, FindRecordType
 from ..util import couchdb_util
@@ -31,6 +32,7 @@ class MedicalRecordService(object):
         :param chief_complaint:
         :param present_illness_history:
         :param past_history:
+        :param rtn_tx_id:是否返回医疗记录的id
         :return:
         """
         record_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
@@ -45,6 +47,7 @@ class MedicalRecordService(object):
         doctor_record_tx = MedicalRecordService.gen_medical_doctor_tx(doctor_id, record_tx.id)
 
         last_block_id = BlockService.add_block([record_tx, patient_record_tx, doctor_record_tx])
+
         return last_block_id
 
     @staticmethod
@@ -208,3 +211,37 @@ class MedicalRecordService(object):
         for key in rtn_fields_dict:
             if record_dict[key] != rtn_fields_dict[key]:
                 record_dict[key] = rtn_fields_dict[key]
+
+    @staticmethod
+    def update_record(old_record_dict, new_record_dict, operator_type, operator_id):
+        """
+        保存更新后的就诊记录，以及新旧记录的关系
+        :param old_record_dict:
+        :param new_record_dict:
+        :param operator_type:
+        :param operator_id:
+        :return:
+        """
+        old_record_dict = old_record_dict.copy()
+        new_record_dict = new_record_dict.copy()
+        # 利用 dict: new_record_dict 创建 MedicalRecord 对象
+        if 'in_tx_id' in new_record_dict.keys():
+            del new_record_dict['in_tx_id']
+        if 'timestamp' in new_record_dict.keys():
+            del new_record_dict['timestamp']
+
+        new_record_obj = MedicalRecord(**new_record_dict)
+        new_record_tx = TransactionService.gen_tx(new_record_obj)
+        new_record_tx_id = new_record_tx.id
+
+        # 构建用于保存更新时，新旧就诊记录关系的对象
+        record_update = MedicalRecordUpdate(old_record_dict['in_tx_id'],
+                                            new_record_tx_id, operator_type, operator_id,
+                                            old_record_dict['patient_id'], old_record_dict['doctor_id'])
+        record_update_tx = TransactionService.gen_tx(record_update)
+
+        patient_record_tx = MedicalRecordService.gen_medical_patient_tx(new_record_obj.patient_id, new_record_tx_id)
+        doctor_record_tx = MedicalRecordService.gen_medical_doctor_tx(new_record_obj.doctor_id, new_record_tx_id)
+
+        last_block_id = BlockService.add_block([new_record_tx, patient_record_tx, doctor_record_tx, record_update_tx])
+        return last_block_id
