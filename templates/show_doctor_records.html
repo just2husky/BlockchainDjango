@@ -48,6 +48,12 @@
                 <td colspan="2">所在交易单ID：{{ record.in_tx_id }} </td>
             </tr>
         </table>
+            <input type="button" onclick="javascript:location.href=
+                    'del-medical-record?record_tx_id={{ record.in_tx_id }}&operator_type=doctor&operator_id={{ record.doctor_id }}'"
+                   value="删除记录">
+            <input type="button" onclick="javascript:location.href=
+                    'to-update-medical-record?record_tx_id={{ record.in_tx_id }}'"
+                   value="更改记录">
             <br><br>
         {% endfor %}
         <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">
