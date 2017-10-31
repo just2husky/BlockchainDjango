@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>区块链系统</title>
+</head>
+<body>
+    <div style="width:100%;text-align:center">
+        <table border="1" align="center">
+            <tr>
+                <th colspan="2">就诊信息</th>
+            </tr>
+            <tr>
+                <td colspan="2">就诊记录ID: {{ record.identifier }} </td>
+            </tr>
+            <tr>
+                <td>病人ID: {{ record.patient_id }} </td>
+                <td>姓名: {{  patient.name }} </td>
+            </tr>
+            <tr>
+                <td>性别: {{  patient.gender }} </td>
+                <td>年龄: {{  patient.age }} </td>
+
+            </tr>
+            <tr>
+                <td>民族: {{  patient.nation}}</td>
+                <td>出生地: {{  patient.born_loc }}</td>
+            </tr>
+            <tr>
+                <td colspan="2">现居地: {{  patient.address }}</td>
+            </tr>
+            <tr>
+                <td>就诊时间: {{ record.record_time }} </td>
+                <td>就诊地点: {{ record.record_loc }} </td>
+
+            </tr>
+            <tr>
+                <td colspan="2">主诉: {{ record.chief_complaint}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">现病史: {{ record.present_illness_history}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">既往史：{{ record.past_history }} </td>
+            </tr>
+            <tr>
+                <td colspan="2">所在交易单ID：{{ record.in_tx_id }} </td>
+            </tr>
+        </table>
+
+        <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">
+        <input type="button" onclick="javascript:location.href='to-doctor-manager'" value="医生管理界面">
+    </div>
+</body>
+</html>

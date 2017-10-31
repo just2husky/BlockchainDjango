@@ -54,8 +54,7 @@ urlpatterns = [
 
     url(r'^del-medical-record$', MedicalRecordController.del_medical_record),
     url(r'^to-update-medical-record$', MedicalRecordController.to_update_medical_record),
-
-    url(r'^update-medical-record$', PatientManagerController.update_medical_record),
+    url(r'^update-medical-record$', MedicalRecordController.update_medical_record),
 
     url(r'^to-patient-manager$', PatientManagerController.to_patient_manager),
     url(r'^get-patient-records$', PatientManagerController.get_patient_records),

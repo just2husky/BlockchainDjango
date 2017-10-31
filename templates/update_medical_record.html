@@ -16,7 +16,10 @@
                         就诊记录ID: {{ record.identifier }}
                     </td>
                 </tr>
+                <!-- 如果 doctor 字典不为 None， 则说明这是病人在查看就诊信息 -->
                 {% if doctor is not None %}
+                    <input type="hidden" name="operator_type" value="patient">
+                    <input type="hidden" name="operator_id" value="{{ record.patient_id }}">
                     <tr>
                         <td>医生编号: {{ doctor.identifier }} </td>
                         <td>姓名: {{ doctor.name }} </td>
@@ -35,6 +38,8 @@
                         <td>级别: {{ doctor.grade }}</td>
                     </tr>
                 {% elif patient is not None %}
+                    <input type="hidden" name="operator_type" value="doctor">
+                    <input type="hidden" name="operator_id" value="{{ record.doctor_id }}">
                     <tr>
                         <td>病人ID: {{ patient.identifier }} </td>
                         <td>姓名: {{  patient.name }} </td>
