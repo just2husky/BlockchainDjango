@@ -96,8 +96,12 @@ class MedicalRecordService(object):
         :return:
         """
         record_list = []
+
         deleted_record_list = []
         deleted_record_tx_id_list = []
+
+        updated_old_record_list = []
+        updated_record_tx_id_list = []
 
         db = couchdb_util.get_db(Const.DB_NAME)
         doc = db[Const.LAST_BLOCK_ID]
@@ -132,12 +136,25 @@ class MedicalRecordService(object):
                     or find_record_type == FindRecordType.DELETED.value) \
                         and 'medical_record_del' == transaction_dict['tx_type']:
                     del_record_dict = eval(transaction_dict['content'])
+
                     # 如果传入的 id 与 medical_record_del 中记录的，对应id_name的id相同时，
                     # 则将该 medical_record_del 中记录的 tx_id 加入到 deleted_record_list 中
                     if identifier == del_record_dict[id_name]:
                         deleted_record_list.append(del_record_dict['tx_id'])
-                        # tx_doc['_id'] 的内容为当前交易单的id
-                        deleted_record_tx_id_list.append(tx_doc['_id'])
+                        deleted_record_tx_id_list.append(tx_doc['_id'])  # tx_doc['_id'] 的内容为当前交易单的id
+
+                # 检查 find_record_type 的值，判断是否检索 就诊记录更新关系 的就诊记录
+                # 就诊记录的tx_id
+                if (find_record_type == FindRecordType.NORMAL.value
+                    or find_record_type == FindRecordType.UPDATED.value) \
+                        and 'medical_record_update' == transaction_dict['tx_type']:
+                    update_record_dict = eval(transaction_dict['content'])
+
+                    # 如果传入的 id 与 medical_record_update 中记录的，对应id_name的id相同时，
+                    # 则将该 medical_record_update 中记录的 tx_id 加入到 update_record_list 中
+                    if identifier == update_record_dict['old_' + id_name]:
+                        updated_old_record_list.append(update_record_dict['old_tx_id'])
+                        updated_record_tx_id_list.append(tx_doc['_id'])  # tx_doc['_id'] 的内容为当前交易单的id
 
                 logger.info(transaction_str)
 
@@ -145,10 +162,15 @@ class MedicalRecordService(object):
 
         logger.info('deleted_record_list: ' + str(deleted_record_list))
         logger.info('record_list: ' + str(record_list))
-        # 从 record_list 中去除已被删除的元素
+
         if find_record_type == FindRecordType.NORMAL.value:
+            # 从 record_list 中去除已被删除的元素
             for deleted_record in deleted_record_list:
                 record_list.remove(deleted_record)
+
+            # 从 record_list 中去除已被更新过的旧的就诊记录
+            for updated_old_record in updated_old_record_list:
+                record_list.remove(updated_old_record)
 
         if find_record_type == FindRecordType.NORMAL.value or find_record_type == FindRecordType.ALL.value:
             return record_list
