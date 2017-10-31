@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 import logging
 
-from ..src.block_pkg.block_ops import init_block
+from .block_service import BlockService
 from ..util import couchdb_util
 from ..util.const import Const
 
@@ -16,7 +16,7 @@ class BlockChainService(object):
     @staticmethod
     def init():
         # 初始化区块链并得到区块链尾端区块的ID
-        last_block_id = init_block()
+        last_block_id = BlockService.init_block()
         logger.info("链尾区块ID为： " + last_block_id)
 
         return last_block_id
