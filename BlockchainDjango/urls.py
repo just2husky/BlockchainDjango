@@ -51,9 +51,10 @@ urlpatterns = [
 
     url(r'^to-add-medical-record$', BlockChainController.to_add_medical_record),
     url(r'^add-medical-record$', BlockChainController.add_medical_record),
-    url(r'^del-medical-record$', MedicalRecordController.del_medical_record),
 
-    url(r'^to-update-medical-record$', PatientManagerController.to_update_medical_record),
+    url(r'^del-medical-record$', MedicalRecordController.del_medical_record),
+    url(r'^to-update-medical-record$', MedicalRecordController.to_update_medical_record),
+
     url(r'^update-medical-record$', PatientManagerController.update_medical_record),
 
     url(r'^to-patient-manager$', PatientManagerController.to_patient_manager),

@@ -16,23 +16,42 @@
                         就诊记录ID: {{ record.identifier }}
                     </td>
                 </tr>
-                <tr>
-                    <td>医生编号: {{ record.doctor_id }} </td>
-                    <td>姓名: {{ doctor.name }} </td>
-                </tr>
-                <tr>
-                    <td>性别: {{ doctor.gender }} </td>
-                    <td>年龄: {{ doctor.age }} </td>
+                {% if doctor is not None %}
+                    <tr>
+                        <td>医生编号: {{ doctor.identifier }} </td>
+                        <td>姓名: {{ doctor.name }} </td>
+                    </tr>
+                    <tr>
+                        <td>性别: {{ doctor.gender }} </td>
+                        <td>年龄: {{ doctor.age }} </td>
 
-                </tr>
-                <tr>
-                    <td>民族: {{ doctor.nation}}</td>
-                    <td>医院: {{ doctor.hospital }}</td>
-                </tr>
-                <tr>
-                    <td>科室: {{ doctor.department }}</td>
-                    <td>级别: {{ doctor.grade }}</td>
-                </tr>
+                    </tr>
+                    <tr>
+                        <td>民族: {{ doctor.nation}}</td>
+                        <td>医院: {{ doctor.hospital }}</td>
+                    </tr>
+                    <tr>
+                        <td>科室: {{ doctor.department }}</td>
+                        <td>级别: {{ doctor.grade }}</td>
+                    </tr>
+                {% elif patient is not None %}
+                    <tr>
+                        <td>病人ID: {{ patient.identifier }} </td>
+                        <td>姓名: {{  patient.name }} </td>
+                    </tr>
+                    <tr>
+                        <td>性别: {{  patient.gender }} </td>
+                        <td>年龄: {{  patient.age }} </td>
+
+                    </tr>
+                    <tr>
+                        <td>民族: {{  patient.nation}}</td>
+                        <td>出生地: {{  patient.born_loc }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">现居地: {{  patient.address }}</td>
+                    </tr>
+                {% endif %}
                 <tr>
                     <td>就诊时间: <input type="text" name="record_time" value="{{ record.record_time }}">  </td>
                     <td>就诊地点: <input type="text" name="record_loc" value="{{ record.record_loc }}"> </td>
@@ -65,8 +84,9 @@
         </form>
 
             <br><br>
-        <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面">
+        <input type="button" onclick="javascript:location.href='blockchain-manager'" value="管理界面"> <br><br>
         <input type="button" onclick="javascript:location.href='to-patient-manager'" value="病人管理界面">
+        <input type="button" onclick="javascript:location.href='to-doctor-manager'" value="医生管理界面">
     </div>
 </body>
 </html>

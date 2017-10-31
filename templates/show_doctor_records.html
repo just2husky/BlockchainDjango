@@ -52,7 +52,7 @@
                     'del-medical-record?record_tx_id={{ record.in_tx_id }}&operator_type=doctor&operator_id={{ record.doctor_id }}'"
                    value="删除记录">
             <input type="button" onclick="javascript:location.href=
-                    'to-update-medical-record?record_tx_id={{ record.in_tx_id }}'"
+                    'to-update-medical-record?record_tx_id={{ record.in_tx_id }}&operator_type=doctor&operator_id={{ record.doctor_id }}'"
                    value="更改记录">
             <br><br>
         {% endfor %}
