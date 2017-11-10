@@ -4,6 +4,8 @@
 import logging
 import os
 import time
+import hashlib
+
 from ecdsa import SigningKey
 from ecdsa import VerifyingKey
 
@@ -47,16 +49,17 @@ class TransactionService(object):
             pvt_key, pub_key = Signature.gen_key_pair()
 
         timestamp = time.time()
+        pub_key_str = bytes.hex(pub_key.to_string())
         # 若content是对象类型，则将其转化为json格式字符串存储
         if isinstance(content, str):
-            temp_tx = Transaction(pub_key.to_pem().decode(), content, timestamp)
+            temp_tx = Transaction(pub_key_str, content, timestamp)
             signature = Signature.sign(pvt_key, content)
         else:
-            temp_tx = Transaction(pub_key.to_pem().decode(), content.__dict__.__str__(), timestamp)
+            temp_tx = Transaction(pub_key_str, content.__dict__.__str__(), timestamp)
             signature = Signature.sign(pvt_key, content.__dict__.__str__())
 
-        temp_tx.set_signature(signature)
-        temp_tx.set_id()
+        temp_tx.signature = bytes.hex(signature)
+        temp_tx.id = TransactionService.gen_tx_id(temp_tx.signature)
         temp_tx.tx_type = TransactionService.get_tx_type(content)
         return temp_tx
 
@@ -129,6 +132,15 @@ class TransactionService(object):
             TransactionService.save_tx(each_tx)
 
     @staticmethod
+    def gen_tx_id(signature):
+        """
+        根据传入的 signature，生成交易的ID
+        :param signature: 为sting类型
+        :return: 交易的id
+        """
+        return hashlib.sha256(bytes.fromhex(signature)).hexdigest()
+
+    @staticmethod
     def get_tx_ids(transaction_list):
         """根据传入的 transaction_list，得到各个 transaction 的 id，以tuple的形式返回"""
         id_list = []
@@ -197,3 +209,18 @@ class TransactionService(object):
             content_dicts.append(tx_content_dict)
 
         return content_dicts
+
+    @staticmethod
+    def verify_tx(tx):
+        """
+        判断 tx 的签名是否正确
+        :param tx: Transaction 对象
+        :return:
+        """
+        sig_str = tx.signature
+        pub_key_str = tx.pub_key
+        content_str = tx.content
+
+        vk = VerifyingKey.from_string(bytes.fromhex(pub_key_str), curve=Const.CURVE)
+        # transaction.content 作为签名的内容
+        return vk.verify(bytes.fromhex(sig_str), content_str.encode('utf-8'))

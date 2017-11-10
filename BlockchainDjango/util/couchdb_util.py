@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # couchdb的地址
-server_addr = 'http://localhost:5984/'
+server_addr = 'http://admin:password@localhost:5984/'
 
 
 def init_db(db_name):

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
-
+import ecdsa
 from enum import Enum, unique
 
 
@@ -10,6 +10,8 @@ class Const(object):
     GENESIS_BLOCK_ID = 'genesis_block'
     PVT_KEY_LOC = 'sk.pem'
     PUB_KEY_LOC = 'vk.pem'
+    # SECP256k1 is the Bitcoin elliptic curve
+    CURVE = ecdsa.SECP256k1
 
 
 @unique

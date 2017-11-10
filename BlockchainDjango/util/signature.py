@@ -13,7 +13,8 @@ class Signature(object):
         生成一对秘钥对，分别存储在sk.pem（私钥），vk.pem（公钥）文件中
         :return: 返回秘钥对
         """
-        pvt_key = SigningKey.generate()
+
+        pvt_key = SigningKey.generate(curve=Const.CURVE)
         open(Const.PVT_KEY_LOC, "wb").write(pvt_key.to_pem())
         pub_key = pvt_key.get_verifying_key()
         open(Const.PUB_KEY_LOC, "wb").write(pub_key.to_pem())
@@ -35,10 +36,10 @@ class Signature(object):
         根据公钥，数字签名对content进行验证
         :param pub_key:
         :param content:
-        :param signature:
+        :param signature: 为string类型
         :return:
         """
-        return pub_key.verify(signature, bytes(content, encoding="utf8"))
+        return pub_key.verify(bytes.fromhex(signature), bytes(content, encoding="utf8"))
 
 
 if __name__ == "__main__":
