@@ -39,3 +39,8 @@ class FindRecordType(Enum):
     # 被更新过的记录
     UPDATED = 'updated'
 
+
+@unique
+class MsgType(Enum):
+    """表示该message的类型"""
+    CLI = 'cli'  # 由客户端发往主节点

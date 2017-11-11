@@ -8,7 +8,7 @@ class TestTransactionService(TestCase):
 
     def test_gen_tx(self):
         transaction = TransactionService.gen_tx("signature")
-        sig_str = transaction.get_signature()
+        sig_str = transaction.signature
         self.assertNotEqual(sig_str,
         '2728add92e953edd25190d957357640fdc0d15949fbd827ea9b411fbbe1e7dc44f5ae3ecc5d8bbdb4e4832bc03650cf7',
                             '数字签名出错！')

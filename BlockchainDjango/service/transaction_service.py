@@ -49,7 +49,7 @@ class TransactionService(object):
         else:
             pvt_key, pub_key = Signature.gen_key_pair()
 
-        timestamp = time.time()
+        timestamp = str(time.time())
         pub_key_str = bytes.hex(pub_key.to_string())
         # 若content是对象类型，则将其转化为json格式字符串存储
         if isinstance(content, str):
@@ -124,7 +124,7 @@ class TransactionService(object):
         if not isinstance(transaction, Transaction):
             raise Exception("形参transaction类型错误，必须为Transaction类的实例！")
         else:
-            couchdb_util.save(db, {'_id': transaction.get_id(), 'Transaction': transaction.__dict__})
+            couchdb_util.save(db, {'_id': transaction.id, 'Transaction': transaction.__dict__})
 
     @staticmethod
     def save_tx_list(transaction_list):
@@ -146,7 +146,7 @@ class TransactionService(object):
         """根据传入的 transaction_list，得到各个 transaction 的 id，以tuple的形式返回"""
         id_list = []
         for each_transaction in transaction_list:
-            id_list.append(each_transaction.get_id())
+            id_list.append(each_transaction.id)
         return tuple(id_list)
 
     @staticmethod
