@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 
-from . import view, search, search2
+from . import view
 from .controller import login_controller
 from .controller.block_chain_controller import BlockChainController
 from .controller.patient_manager_controller import PatientManagerController
@@ -30,9 +30,6 @@ name: 用来反向获取 URL
 """
 urlpatterns = [
     url(r'^hello$', view.hello),
-    url(r'^search-form$', search.search_form),
-    url(r'^search$', search.search),
-    url(r'^search-post$', search2.search_post),
 
     url(r'^log-page$', login_controller.log_page),
     url(r'^login$', login_controller.login),
