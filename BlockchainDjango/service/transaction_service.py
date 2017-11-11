@@ -5,6 +5,7 @@ import logging
 import os
 import time
 import hashlib
+import json
 
 from ecdsa import SigningKey
 from ecdsa import VerifyingKey
@@ -55,7 +56,7 @@ class TransactionService(object):
             temp_tx = Transaction(pub_key_str, content, timestamp)
             signature = Signature.sign(pvt_key, content)
         else:
-            temp_tx = Transaction(pub_key_str, content.__dict__.__str__(), timestamp)
+            temp_tx = Transaction(pub_key_str, content.__dict__, timestamp)
             signature = Signature.sign(pvt_key, content.__dict__.__str__())
 
         temp_tx.signature = bytes.hex(signature)
@@ -123,7 +124,7 @@ class TransactionService(object):
         if not isinstance(transaction, Transaction):
             raise Exception("形参transaction类型错误，必须为Transaction类的实例！")
         else:
-            couchdb_util.save(db, {'_id': transaction.get_id(), 'Transaction': transaction.__dict__.__str__()})
+            couchdb_util.save(db, {'_id': transaction.get_id(), 'Transaction': transaction.__dict__})
 
     @staticmethod
     def save_tx_list(transaction_list):
@@ -157,8 +158,7 @@ class TransactionService(object):
         """
         # db = couchdb_util.get_db(Const.DB_NAME)
         tx_doc = db[tx_id]
-        transaction_str = tx_doc['Transaction']
-        transaction_dict = eval(transaction_str)
+        transaction_dict = tx_doc['Transaction']
         transaction_dict['tx_id'] = tx_id
         return transaction_dict
 
@@ -183,8 +183,7 @@ class TransactionService(object):
         :return:
         """
         tx_dict = TransactionService.find_tx_by_id(tx_id)
-        tx_content = tx_dict['content']
-        tx_content_dict = eval(tx_content)
+        tx_content_dict = tx_dict['content']
         # 将该医疗记录的tx_id和timestamp存入到所返回的dict中
         tx_content_dict['in_tx_id'] = tx_dict['tx_id']
         tx_content_dict['timestamp'] = tx_dict['timestamp']
@@ -201,8 +200,7 @@ class TransactionService(object):
         tx_dicts = TransactionService.find_txs_by_ids(tx_id_list)
         content_dicts = []
         for tx_dict in tx_dicts:
-            tx_content = tx_dict['content']
-            tx_content_dict = eval(tx_content)
+            tx_content_dict = tx_dict['content']
             # 将该医疗记录的tx_id和timestamp存入到所返回的dict中
             tx_content_dict['in_tx_id'] = tx_dict['tx_id']
             tx_content_dict['timestamp'] = tx_dict['timestamp']

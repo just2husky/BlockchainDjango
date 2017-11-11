@@ -25,7 +25,7 @@ class Signature(object):
         """
         根据私钥对content进行数字签名
         :param pvt_key:
-        :param content:
+        :param content: 为string类型
         :return:
         """
         return pvt_key.sign(bytes(content, encoding="utf8"),  sigencode=ecdsa.util.sigencode_string)

@@ -46,19 +46,17 @@ class PatientService(object):
             # tx 保存了 一个Transaction 的 ID
             for tx in tx_list:
                 tx_doc = db[tx]
-                transaction_str = tx_doc['Transaction']
-                transaction_dict = eval(transaction_str)
+                transaction_dict = tx_doc['Transaction']
 
                 if 'patient' == transaction_dict['tx_type']:
-                    content_str = transaction_dict['content']
-                    content_dict = eval(content_str)
+                    content_dict = transaction_dict['content']
                     if identifier == content_dict['identifier']:
                         content_dict['transaction_id'] = transaction_dict['id']
                         content_dict['block_id'] = doc['_id']
                         logger.info('Find patient ' + identifier + ', in transaction ' +
                                     transaction_dict['id'] + ', in block ' + doc['_id'])
                         return content_dict
-                logger.info(transaction_str)
+                logger.info(str(transaction_dict))
 
             doc = db[doc['pre_id']]
 

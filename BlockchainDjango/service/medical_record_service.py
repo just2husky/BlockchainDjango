@@ -118,13 +118,11 @@ class MedicalRecordService(object):
             # tx 保存了 一个Transaction 的 ID
             for tx in tx_list:
                 tx_doc = db[tx]
-                transaction_str = tx_doc['Transaction']
-                transaction_dict = eval(transaction_str)
+                transaction_dict = tx_doc['Transaction']
 
                 # 若只检索被删除的就诊记录时，则不检索其他就诊记录。否则的话，则检索
                 if find_record_type != FindRecordType.DELETED.value and tx_type == transaction_dict['tx_type']:
-                    content_str = transaction_dict['content']
-                    content_dict = eval(content_str)
+                    content_dict = transaction_dict['content']
                     if identifier == content_dict[id_name]:
                         logger.info('Find ' + identifier + ', in transaction ' +
                                     transaction_dict['id'] + ', in block ' + doc['_id'])
@@ -135,7 +133,7 @@ class MedicalRecordService(object):
                 if (find_record_type == FindRecordType.NORMAL.value
                     or find_record_type == FindRecordType.DELETED.value) \
                         and 'medical_record_del' == transaction_dict['tx_type']:
-                    del_record_dict = eval(transaction_dict['content'])
+                    del_record_dict = transaction_dict['content']
 
                     # 如果传入的 id 与 medical_record_del 中记录的，对应id_name的id相同时，
                     # 则将该 medical_record_del 中记录的 tx_id 加入到 deleted_record_list 中
@@ -148,7 +146,7 @@ class MedicalRecordService(object):
                 if (find_record_type == FindRecordType.NORMAL.value
                     or find_record_type == FindRecordType.UPDATED.value) \
                         and 'medical_record_update' == transaction_dict['tx_type']:
-                    update_record_dict = eval(transaction_dict['content'])
+                    update_record_dict = transaction_dict['content']
 
                     # 如果传入的 id 与 medical_record_update 中记录的，对应id_name的id相同时，
                     # 则将该 medical_record_update 中记录的 tx_id 加入到 update_record_list 中
@@ -156,7 +154,7 @@ class MedicalRecordService(object):
                         updated_old_record_list.append(update_record_dict['old_tx_id'])
                         updated_record_tx_id_list.append(tx_doc['_id'])  # tx_doc['_id'] 的内容为当前交易单的id
 
-                logger.info(transaction_str)
+                logger.info(str(transaction_dict))
 
             doc = db[doc['pre_id']]
 
@@ -215,7 +213,7 @@ class MedicalRecordService(object):
         :return:
         """
         tx_dict = TransactionService.find_tx_by_id(tx_id)
-        record_dict = eval(tx_dict['content'])
+        record_dict = tx_dict['content']
         patient_id = record_dict['patient_id']
         doctor_id = record_dict['doctor_id']
         medical_record_del = MedicalRecordDel(tx_id, operator_type, operator_id, patient_id, doctor_id)
