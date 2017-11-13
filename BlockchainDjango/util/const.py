@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 import ecdsa
+import os.path
 from enum import Enum, unique
 
 
@@ -8,8 +9,8 @@ class Const(object):
     DB_NAME = 'block_tree'
     LAST_BLOCK_ID = 'last_block'
     GENESIS_BLOCK_ID = 'genesis_block'
-    PVT_KEY_LOC = 'sk.pem'
-    PUB_KEY_LOC = 'vk.pem'
+    PVT_KEY_LOC = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'files', 'sk.pem')
+    PUB_KEY_LOC = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'files', 'vk.pem')
     # SECP256k1 is the Bitcoin elliptic curve
     CURVE = ecdsa.SECP256k1
 

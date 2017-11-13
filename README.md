@@ -1,4 +1,5 @@
-#MedicalBlockchainDjango
+# MedicalBlockchainDjango
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
 ## 目的
 本项目是为了实现一个简单的，基于区块链的，医疗信息管理系统.
 ## 使用的技术

@@ -2,12 +2,9 @@
 # -*- coding: UTF-8 -*-
 
 import logging
-import os
 import time
 import hashlib
-import json
 
-from ecdsa import SigningKey
 from ecdsa import VerifyingKey
 
 from ..util import couchdb_util
@@ -23,8 +20,6 @@ from ..entity.doctor_record import DoctorRecord
 from ..entity.doctor_last_record import DoctorLastRecord
 from ..entity.medical_record_del import MedicalRecordDel
 from ..entity.medical_record_update import MedicalRecordUpdate
-
-# from .patient_service import PatientService
 
 db = couchdb_util.get_db(Const.DB_NAME)
 
@@ -43,11 +38,7 @@ class TransactionService(object):
         if content is None:
             raise Exception("The content is None!")
 
-        if os.path.exists(Const.PVT_KEY_LOC) and os.path.exists(Const.PUB_KEY_LOC):
-            pvt_key = SigningKey.from_pem(open(Const.PVT_KEY_LOC).read())
-            pub_key = VerifyingKey.from_pem(open(Const.PUB_KEY_LOC).read())
-        else:
-            pvt_key, pub_key = Signature.gen_key_pair()
+        pvt_key, pub_key = Signature.get_key_pair()
 
         timestamp = str(time.time())
         pub_key_str = bytes.hex(pub_key.to_string())
@@ -60,7 +51,7 @@ class TransactionService(object):
             signature = Signature.sign(pvt_key, content.__dict__.__str__())
 
         temp_tx.signature = bytes.hex(signature)
-        temp_tx.id = TransactionService.gen_tx_id(temp_tx.signature)
+        temp_tx.id = Signature.gen_id_by_sig(temp_tx.signature)
         temp_tx.tx_type = TransactionService.get_tx_type(content)
         return temp_tx
 
@@ -131,15 +122,6 @@ class TransactionService(object):
         """ 循环调用 save_tx, 将transaction list 存入到数据库中"""
         for each_tx in transaction_list:
             TransactionService.save_tx(each_tx)
-
-    @staticmethod
-    def gen_tx_id(signature):
-        """
-        根据传入的 signature，生成交易的ID
-        :param signature: 为sting类型
-        :return: 交易的id
-        """
-        return hashlib.sha256(bytes.fromhex(signature)).hexdigest()
 
     @staticmethod
     def get_tx_ids(transaction_list):

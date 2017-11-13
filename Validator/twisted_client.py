@@ -3,6 +3,7 @@ import time
 from twisted.internet import reactor, protocol
 
 from BlockchainDjango.service.transaction_service import TransactionService
+from BlockchainDjango.service.message_service import MessageService
 from BlockchainDjango.entity.message import Message
 from BlockchainDjango.util.const import MsgType
 from BlockchainDjango.util.logging_util import Logger
@@ -25,9 +26,8 @@ class EchoClient(protocol.Protocol):
         :return:
         """
         transaction = TransactionService.gen_tx("signature")
-        tx_str = json.dumps(Message(msg_type=MsgType.CLI.value,
-                                    transaction=transaction.__dict__,
-                                    timestamp=str(time.time())).__dict__)
+        tx_str = json.dumps(MessageService.gen_msg(msg_type=MsgType.CLI.value,
+                                                   transaction=transaction).__dict__)
         self.transport.write(tx_str.encode())
 
 
