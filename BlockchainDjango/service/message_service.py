@@ -2,8 +2,10 @@
 # -*- coding: UTF-8 -*-
 import logging
 import time
+from ecdsa import VerifyingKey
 
 from ..util.signature import Signature
+from ..util.const import Const
 from ..entity.message import Message
 
 logging.basicConfig(level=logging.INFO)
@@ -28,3 +30,18 @@ class MessageService(object):
         # pub_key=bytes.hex(pub_key.to_string()) 为了json 序列化
         return Message(msg_id=msg_id, msg_type=msg_type, transaction=transaction.__dict__,
                        timestamp=timestamp, pub_key=bytes.hex(pub_key.to_string()), signature=signature)
+
+    @staticmethod
+    def verify_msg(msg):
+        """
+        判断 msg 的签名是否正确
+        :param msg: Message 对象
+        :return:
+        """
+        sig_str = msg.signature
+        pub_key_str = msg.pub_key
+        content_str = str(msg.transaction)
+
+        vk = VerifyingKey.from_string(bytes.fromhex(pub_key_str), curve=Const.CURVE)
+        # transaction.content 作为签名的内容
+        return vk.verify(bytes.fromhex(sig_str), content_str.encode('utf-8'))

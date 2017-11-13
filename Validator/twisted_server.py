@@ -5,7 +5,9 @@ import json
 from BlockchainDjango.util.logging_util import Logger
 from BlockchainDjango.util.const import MsgType
 from BlockchainDjango.entity.transaction import Transaction
+from BlockchainDjango.entity.message import Message
 from BlockchainDjango.service.transaction_service import TransactionService
+from BlockchainDjango.service.message_service import MessageService
 
 
 class Echo(protocol.Protocol):
@@ -31,6 +33,16 @@ class Echo(protocol.Protocol):
         :param msg_dict:
         :return:
         """
+        # 1. 验证 Message 本身是否正确
+        verify_rlt = MessageService.verify_msg(Message(**msg_dict))
+        if verify_rlt:
+            Logger.info("MessageService的内容为正确")
+            self.transport.write("MessageService内容正确\n".encode())
+        else:
+            Logger.info("MessageService的内容为错误")
+            self.transport.write("MessageService内容错误\n".encode())
+
+        # 2. 验证 Message 中所存储的 Transaction 是否正确
         tx_obj = Transaction()
         tx_dict = msg_dict['transaction']
         tx_obj.init_tx_by_dict(tx_dict)
